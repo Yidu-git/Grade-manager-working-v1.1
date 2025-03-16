@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Manager</title>
+
+    <link rel="stylesheet" href="Styles/main.css">
+    <link rel="stylesheet" href="Styles/Ratings.css">
+</head>
+<body>
+    
+    <div class="header">
+        <p class="web_name" id="web_name">Grade <span>Manager</span></p>
+        <button class="button settings" popovertarget="Settings-popover"></button>
+    </div>
+
+    <div class="table container">
+        <div class="table title">
+            <li>Grades</li>
+            <div>
+                <button class="button primary" popovertarget="Popover">+</button>
+                <button class="button secondary" popovertarget="Average-popover">●●●</button>
+                <button class="button secondary" id="Reload-button">reload</button>
+            </div>
+        </div>
+
+        <!-- Average popover -->
+        <div class="popover" id="Average-popover" popover>
+            <button popovertarget="Average-popover" popovertargetaction="hide" class="icon"><span>❌</span></button>
+            <li id="Average-label">Avarage : </li> <br>
+            <li class="A" id="Average-rating">.</li> <br>
+            <input list="Subjects" class="switch main fill" id="Average-subject" placeholder="Enter a subject (All for all)"> <br>
+            <input list="Types" class="switch main fill" id="Average-type" placeholder="Enter a type (All for all)"> <br>
+            <button class="button primary" id="Calculate-average-button" >Calculate</button>
+        </div>
+
+        <!-- Settings popover -->
+        <div class="popover settings" id="Settings-popover" popover>
+            <button popovertarget="Settings-popover" popovertargetaction="hide" class="icon" id="exit-settings"><span>❌</span></button>
+            <li>Settings</li> 
+            <br style="font-size: smaller;"> <hr> <br>
+            <label class="switch">
+                <li>Theme</li>
+                <select class="switch main" id="theme"> 
+                    <option value="System">System</option>
+                    <option value="Dark">Dark</option>
+                    <option value="Light">Light</option>
+                </select>
+            </label>
+            <br>
+            <label class="switch">
+                <li>Color scheme</li>
+                <select class="switch main" id="Color-scheme">
+                    <option value="Purple">Purple</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Mint">Mint</option>
+                    <option value="Magenta">Magenta</option>
+                </select>
+            </label>
+            <br>
+            <div style="display: flex;flex-direction: column; gap: 10px;">
+                <li style="text-align: left;">Subjects</li>
+                <div style="display: flex;">
+                    <button class="button secondary fill" id="Reset-Subjects">Reset subjects</button>
+                    <button class="button secondary fill" popovertarget="Subject-remove-popover">Remove subject</button> <br>
+                </div>
+                <li style="text-align: left;">Grades</li>
+                <button class="button secondary" id="Reset-Grades" >Reset grades</button>
+            </div>
+        </div>
+
+        <!-- Remove grade popover -->
+        <div class="popover" id="Grade-remove-popover" popover>
+            <li>Remove grade</li> <br>
+            <select class="switch main" name="Grade select" id="Grade-select">
+                <!-- Grades -->
+            </select>
+            <button class="button primary" id="Remove-Grade">Remove</button>
+        </div>
+
+        <!-- Reomove subject popover -->
+        <div class="popover" id="Subject-remove-popover" popover>
+            <li>Remove subject</li> <br>
+            <input list="Subjects" class="switch main fill" id="Grade-remove-select"> <br>
+            <button class="button primary" id="Remove-Subject" popovertarget="Subject-remove-popover" popovertargetaction="hide">Remove</button>
+        </div>
+
+        <!-- Grade entry popover -->
+        <div class="popover"  id="Popover" popover >
+            <button popovertarget="Popover" popovertargetaction="hide" class="icon"><span>❌</span></button>
+            <p>Enter grade</p>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                <input type="text" class="Input" placeholder="Enter a score" id="Score-input">
+                <input class="Input" list="Subjects" name="Subjects" id="Subject-input" placeholder="Pick a subject">
+                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="What type of grade is it? (Test by default)">
+                <button class="button primary" id="Submit-button" popovertarget="Popover" popovertargetaction="hide">Submit</button>
+                <button class="button primary" id="Subject-add-button" >Add subject</button>
+            </div>
+        </div>
+
+        <datalist id="Subjects">
+            <!-- Subjects get added ↓here↓ -->
+        </datalist>
+
+        <datalist id="Types">
+            <!-- Types get added here -->
+        </datalist>
+
+        <div>
+            <table class="Table Main">
+                <thead class="Table head">
+                    <th class="Table head">Subject</th>  
+                    <th class="Table head">Score</th>
+                    <th class="Table head">Rating</th>
+                    <th class="Table head">Remove</th>
+                </thead>
+                <hr style="width: 100%;">
+                <br>
+                <tbody class="Table body" id="table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="Notification-popover" class="popover" popover><li style="align-self: center;"></li></div>
+
+    <script src="/eel.js" ></script>
+    <script src="Scripts/script.js"></script>
+</body>
+</html>

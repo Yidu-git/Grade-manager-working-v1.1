@@ -1,0 +1,354 @@
+:root {
+    color-scheme: light;
+    --primary : #742bfc ;
+    --primary-hover: #9a66fa ;
+    --primary-active: #b790ff ;
+    --primary-shadow: #50039c76;
+    --bg: #f6f3ea;
+    --text-main: #1f1e1e;
+
+    --cancel : #ff0554;
+}
+
+:root:has(#theme [value='Light']:checked) {
+    color-scheme: light;
+    --bg: #f6f3ea;
+    --text-main: #1f1e1e;
+    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)80%,rgb(69, 69, 70));
+    --brightness: 0%;
+}
+
+:root:has(#theme [value='Dark']:checked) {
+    color-scheme: dark;
+    --bg: rgb(28, 27, 29);
+    --text-main: rgb(237, 234, 229);
+    --brightness: 150%;
+}
+
+:root:has(#theme [value='System']:checked) {
+    color-scheme: system;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: rgb(28, 27, 29);
+        --text-main: rgb(237, 234, 229);
+        --box-shadow: 0px 5px 30px -10px color-mix(in oklab,var(--primary-shadow)10%,rgb(0, 0, 0));
+        --brightness: 150%;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+    --bg: #edeadf;
+    --text-main: #1f1e1e;
+    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)80%,rgb(69, 69, 70));
+    }
+}
+
+:root:has(#Color-theme [value='Purple']:checked) {
+    color-scheme: light;
+    --primary : #742bfc ;
+    --primary-hover: #9a66fa ;
+    --primary-active: #b790ff ;
+    --primary-shadow: #50039c76;
+}
+
+:root:has(#Color-scheme [value='Red']:checked) {
+    --primary : #fc2b6a ;
+    --primary-hover: #fa6686 ;
+    --primary-active: #ff9090 ;
+    --primary-shadow: #9c032c76;
+}
+
+:root:has(#Color-scheme [value='Blue']:checked) {
+    --primary : #1c49ff ;
+    --primary-hover: #6666fa ;
+    --primary-active: #9490ff ;
+    --primary-shadow: #03069c76;
+}
+
+:root:has(#Color-scheme [value='Green']:checked) {
+    --primary : #22c659 ;
+    --primary-hover: #66fab5 ;
+    --primary-active: #90ffe7 ;
+    --primary-shadow: #05890076;
+}
+
+:root:has(#Color-scheme [value='Mint']:checked) {
+    --primary : #03b5d0 ;
+    --primary-hover: #50d5c1 ;
+    --primary-active: #90ffd3 ;
+    --secondary : #ff50d6 ;
+    --secondary-hover: #d550c3 ;
+    --secondary-active: #ff90f2 ;
+    --primary-shadow: #00728976;
+}
+
+:root:has(#Color-scheme [value='Orange']:checked) {
+    --primary : #ffca1c ;
+    --primary-hover: #ffd760 ;
+    --primary-active: #fdff90 ;
+    --primary-shadow: #897e0076;
+}
+
+:root:has(#Color-scheme [value='Magenta']:checked) {
+    --primary : #e42bfc ;
+    --primary-hover: #f766fa ;
+    --primary-active: #fb90ff ;
+    --primary-shadow: #92039c76;
+}
+
+html {
+    color-scheme: light dark;
+}
+
+*{
+    color: var(--text-main);
+    margin: 0;
+    font-family: Montserrat;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    transition: all 100ms;
+    --cancel : #ff0554;
+}
+
+body {
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    background-repeat:no-repeat;
+    background-image: linear-gradient(130deg in oklab, var(--bg), color-mix(in oklab,var(--bg) 90%,rgb(121, 121, 121)));
+}
+
+.header {
+    color: var(--text-main);
+    display: flex;
+    justify-content:space-evenly;
+    border-radius: 0px 0px 15px 15px;
+    background-color: var(--bg);
+    position: absolute;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    padding: 0px 0px;
+    font-weight:  400;
+    font-size: 20px;
+    text-rendering: optimizeLegibility;
+    box-shadow: var(--box-shadow);
+}
+
+tr {
+    border: 10px #00000050;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('/Fonts/Montserrat-VariableFont_wght.ttf');
+}
+
+.filler {
+    width: 100px;
+    height: 100%;
+}
+
+.popover {
+    overflow: visible;
+    flex-direction: column;
+    gap: 10px;
+    width: 70%;
+    position: relative;
+    align-self: center;
+    justify-self: center;
+    background-color: var(--bg);
+    padding: 20px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--box-shadow);
+}
+
+.popover.settings {
+    gap: 50px;
+}
+
+.popover p {
+    text-align: left;
+}
+
+.Input {
+    font-weight: 400;
+    padding: 0px 10px;
+    background-color: color-mix(in oklab,var(--bg) 95%,white);
+    height: 20px;
+    border-radius: 1000px;
+    border: solid;
+    border-width: 2px;
+    border-color: var(--primary);
+}
+
+.header span{
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.table.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: 60px 25px;
+    padding: 10px 15px ;
+    gap: 15px;
+    justify-content: center;
+    background-color: var(--bg);
+    font-size: 24px;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    height: max-content;
+    box-shadow: var(--box-shadow)
+}
+
+.table.title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 0px;
+    width: 100%;
+}
+
+.Table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.Table.main{
+    table-layout: fixed;
+    border: 10px #1e1e1e;
+}
+
+.Table.head {
+    font-size: 24px;
+    font-weight: 450;
+} 
+
+.Table.body {
+    table-layout: fixed;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.button {
+    cursor: pointer;
+    padding: 5px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 1000px;
+    transition: all 200ms;
+}
+
+.button:hover {
+    box-shadow: 0px 5px 5px 0px  #50505039;
+}
+
+.button:active {
+    box-shadow: 0px 0px 0px 0px  #50505039;
+}
+
+.button.primary {
+    background-color: var(--primary);
+}
+
+.button.primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.button.primary:active {
+    background-color: var(--primary-active);
+}
+
+.button.secondary {
+    background-color: #1f1e1e;
+    outline: 5px solid var(--primary);
+    outline-offset: -2.5px;
+}
+
+.button.secondary:hover {
+    box-shadow: 0px 5px 10px -1px var(--primary);
+}
+
+.button.secondary:active {
+    background-color: var(--primary);
+}
+
+.fill{
+    width: 100%;
+}
+
+.button.settings {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"><path d="m47.16 21.221-5.91-.966c-.346-1.186-.819-2.326-1.411-3.405l3.45-4.917c.279-.397.231-.938-.112-1.282l-3.889-3.887c-.347-.346-.893-.391-1.291-.104l-4.843 3.481c-1.089-.602-2.239-1.08-3.432-1.427l-1.031-5.886C28.607 2.35 28.192 2 27.706 2h-5.5c-.49 0-.908.355-.987.839l-.956 5.854c-1.2.345-2.352.818-3.437 1.412l-4.83-3.45c-.399-.285-.942-.239-1.289.106L6.82 10.648c-.343.343-.391.883-.112 1.28l3.399 4.863c-.605 1.095-1.087 2.254-1.438 3.46l-5.831.971c-.482.08-.836.498-.836.986v5.5c0 .485.348.9.825.985l5.831 1.034c.349 1.203.831 2.362 1.438 3.46L6.655 38c-.284.397-.239.942.106 1.289l3.888 3.891c.343.343.884.391 1.281.112l4.87-3.411c1.093.601 2.248 1.078 3.445 1.424l.976 5.861c.079.481.496.834.985.834h5.5c.485 0 .9-.348.984-.825l1.045-5.89c1.199-.353 2.348-.833 3.43-1.435l4.905 3.441c.398.281.938.232 1.282-.111l3.888-3.891c.346-.347.391-.894.104-1.292l-3.498-4.857c.593-1.08 1.064-2.222 1.407-3.408l5.918-1.039c.479-.084.827-.5.827-.985v-5.5c.001-.49-.354-.908-.838-.987zM25 32c-3.866 0-7-3.134-7-7s3.134-7 7-7 7 3.134 7 7-3.134 7-7 7z"/></svg>');
+    background-color: var(--primary);
+    background-position: center;
+    background-repeat:no-repeat;
+    background-size: 25px;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+}
+
+.button.settings:hover {
+    background-color: var(--primary-hover);
+    box-shadow: 0px 0px 15px -3px var(--primary);
+}
+
+button.icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
+    filter: invert(100%) grayscale();
+    background-color: color-mix(in oklab,var(--bg) 90% , rgb(0, 0, 0));
+    border-radius: 1000px;
+    padding: .7rem;
+}
+
+button.icon span {
+    filter: invert(100%) brightness(var(--brightness));
+}
+
+.switch {
+    display: flex;
+    justify-content: space-between;
+}
+
+.switch.main {
+    background-color: color-mix(in oklab,var(--bg) 95% ,var(--primary));
+    border-style: solid;
+    height: 25px;
+    width: 100px;
+    border-radius: 1000px;
+    padding: 0px 10px;
+}
+
+.switch.main.fill {
+    width: calc(100% - 25px) ;
+}
+
+.checkbox.cancel {
+    margin: 10px;
+    appearance: none;
+}
+
+.checkbox.cancel::before {
+    content: '❌';
+    position: relative;
+    top: -.2rem;
+    left: -.2rem;
+    filter: grayscale();
+}

@@ -1,0 +1,26 @@
+* {
+    --rating-bg: #0a0018;
+}
+
+.A,.B, .C ,.D ,.F{
+    font-weight: 600;
+    text-align: center;
+    background-color: var(--rating-bg);
+    border-radius: 1000px;
+}
+
+.A {
+    color: rgb(15, 255, 10);
+}
+.B {
+    color: rgb(157, 255, 0);
+}
+.C {
+    color: rgb(242, 255, 0);
+}
+.D {
+    color: rgb(255, 108, 10);
+}
+.F {
+    color: rgb(255, 10, 63);
+}
