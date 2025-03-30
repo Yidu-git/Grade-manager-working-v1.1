@@ -11,7 +11,46 @@ dirname  = os.path.dirname(__file__ + 'Gui')
 eel.init('Ui', allowed_extensions=['.html','.css','.js','.json'], js_result_timeout=1000)
 Grade_count = 0
 
-@eel
+@eel.expose
+class sort :
+    def __init__(self):
+        pass
+
+    def quick_sort(List,left=0,right=0 ):
+        if right > left : right=len(List) - 1
+        elif left < right :
+            paratitionPos = self.paratition(left,right)
+            self.quick_sort(List,left,paratitionPos - 1)
+            self.quick_sort(List,paratitionPos + 1,right)
+    
+    def praratition(List,left,right,dict=False,DictValue=0):
+        i = left
+        j = right - 1
+        pivot = List[right]
+
+        if not dict:
+            while i < j:
+                while i < right and List[i] < pivot:
+                    i += 1
+                while j > left and List[j] >= pivot:
+                    j -= 1
+                if i < j:
+                    List[i],List[j] = List[j],List[i]
+        if List[i] > pivot:
+            List[i], List[right] = List[right], List[i]
+
+        return i
+
+    def Sort_data(DataList,accending):
+        if type(DataList) == list:
+            return self.quick_sort(DataList)
+            # if not accending:
+
+@eel.expose
+class grades :
+    def __init__(self,data,subjects):
+        self.data = {}
+        self.subjects = []
 
 @eel.expose
 def get_Grade_count():
