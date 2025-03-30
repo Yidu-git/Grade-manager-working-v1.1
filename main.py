@@ -11,6 +11,8 @@ dirname  = os.path.dirname(__file__ + 'Gui')
 eel.init('Ui', allowed_extensions=['.html','.css','.js','.json'], js_result_timeout=1000)
 Grade_count = 0
 
+@eel
+
 @eel.expose
 def get_Grade_count():
     content  = read_data()
