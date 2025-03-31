@@ -1,14 +1,21 @@
 import json
 import eel
 import os
+from tkinter import Tk, filedialog
 
-data_file_dir = 'data.json'
+default_data_file_dir = 'data.json'
+user_data_file_dir = 'UserData.json'
+CurrentVersion = 1.2
 
 dirname  = os.path.dirname(__file__ + 'Gui')
 
+root = Tk()
+root.withdraw()
+
 # eel.init(f'{os.path.dirname(os.path.realpath(__file__))}/web')
 
-eel.init('Ui', allowed_extensions=['.html','.css','.js','.json'], js_result_timeout=1000)
+if __name__ == '__main__' :
+    eel.init('Ui', allowed_extensions=['.html','.css','.js','.json'], js_result_timeout=1000)
 Grade_count = 0
 
 @eel.expose
@@ -47,41 +54,47 @@ class sort :
             # if not accending:
 
 @eel.expose
-class grades :
-    def __init__(self,data,subjects):
-        self.data = {}
-        self.subjects = []
-
-@eel.expose
 def get_Grade_count():
     content  = read_data()
     Grade_count = len(content['Grades'])
     print(Grade_count)
     return str(Grade_count)
 
-def read_data():
-    with open(data_file_dir,'r') as f:
+def read_data(dataLocation=default_data_file_dir):
+    with open(dataLocation,'r') as f:
         content = json.loads(f.read())
         return content
- 
-def write_data(content):
-    with open(data_file_dir,'w') as f:
+
+@eel.expose
+def openFile():
+    print()
+    path = filedialog.askopenfilename()
+    default_data_file_dir = path
+
+def write_data(content,dataLocation=default_data_file_dir):
+    with open(dataLocation,'w') as f:
         f.write(json.dumps(content))
     return content
 
-if not os.path.exists(data_file_dir):
-    with open(data_file_dir,'x') as file:
-        file.write(json.dumps({'Grades':[],'Subjects':[],'Types': [],'User-settings':{'Theme':'Systemm','Color-scheme':"purple"}}))
+if not os.path.exists(default_data_file_dir):
+    with open(default_data_file_dir,'x') as file:
+        file.write(json.dumps({'Grades':[],'Subjects':[],'Identifiers': [],'Version':CurrentVersion}))
 
 else:
     content  = read_data()
     Grade_count = len(content['Grades'])
+
+if not os.path.exists(user_data_file_dir):
+    with open(user_data_file_dir,'x') as file:
+        file.write(json.dumps({'User-settings':{'Theme':'Systemm','Color-scheme':"purple"}}))
 
 def clean_up_grades():
     content = read_data()
     for grade in content['Grades']:
         if not '/' in grade['Grade']:
             grade['Grade'] = str(int(grade['Grade']))
+        if grade['Subject'] not in content['Subjects']:
+            content['Subjects'].append(grade['Subject'])
     write_data(content)
 
 clean_up_grades()
@@ -98,25 +111,40 @@ def check_gradecount():
     write_data(content)
 
 @eel.expose
-def get_average(subject,type):
+def get_average(subject,identifier,absolute=False):
     content = read_data()
     grades = []
 
-    if subject == '' and type == '' :
+    if subject == '' and identifier == '' :
         average = get_grades_average()
         return average
 
     elif subject == '':
-        average = get_type_average(type)
-        print(type)
-    elif type == '':
+        average = get_identifier_average(identifier,absolute)
+        print(identifier)
+    elif identifier == '':
         average = get_subject_average(subject)
         print(subject)
     
     else:
         for grade in content['Grades']:
-            if grade['Subject'] == subject and grade['Type'] == type :
-                grades.append(grade['Grade'])
+            gradeIdentifiers = grade['Identifiers'].split(' ')
+            if absolute:
+                identifierCount = 0
+                Identifier = False
+                for i in gradeIdentifiers:
+                    if i in identifier.split(' '):
+                        identifierCount += 1
+                if identifierCount == len(identifier.split(' ')): Identifier = True
+                if grade['Subject'] == subject and Identifier == identifier :
+                    grades.append(grade['Grade'])
+            else:
+                Identifier = False
+                for i in gradeIdentifiers:
+                    if i in identifier.split(' '):
+                        Identifier = True
+                if Identifier:
+                    grades.append(grade['Grade'])
         average = calculate_average(grades)
     print(calculate_average(grades))
     return average
@@ -168,44 +196,83 @@ def check_rating(score) :
         return 'F'
 
 @eel.expose
-def save_type(type):
+def save_identifier(identifier):
     content = read_data()
-    content['Types'].append(type)
+    Identifiers = identifier.split(' ')
+    for i in Identifiers:
+        content['Identifiers'].append(i)
     write_data(content)
 
 @eel.expose
-def get_types():
+def get_identifiers():
     content = read_data()
-    return content['Types']
+    return content['Identifiers']
 
 eel.expose
-def type_exists(type):
+def identifier_exists(type):
     content = read_data()
-    if type in content['Types'] : return True
+    if type in content['Identifiers'] : return True
     else : return False
 
 @eel.expose
-def get_type_average(type):
-    if type_exists(type):
-        content = read_data()
-        grades = []
-        for grade in content['Grades'] :
-            if grade['Type'] == type:
-                grades.append(grade['Grade'])
-        average = calculate_average(grades)
-        return average
-    else : return 'Type does not exist'
+def get_identifier_average(identifiers,Absolute=True):
+    if ' ' in identifiers:
+        Identifiers = identifiers.split(' ')
+        print(identifiers)
+        print(Identifiers)
+        exists = False
+
+        for i in identifiers.split(' '):
+            if identifier_exists(identifiers): existsCount += 1
+            else : return 'One or more Identifiers do not exist'
+        
+        if existsCount == len(identifiers): exists = True
+
+        if exists:
+            content = read_data()
+            grades = []
+
+            for grade in content['Grades'] :
+                gradeIdentifiers = grade['Identifiers'].split(' ')
+                Exists = False
+                ExistCount = 0
+                for i in gradeIdentifiers:
+                    if Absolute:
+                        if i in identifiers: ExistCount += 1
+                        if ExistCount == len(identifiers): Exists = True
+                    else:
+                        if i in identifiers: Exists = True
+                if Exists:
+                    grades.append(grade['Grade'])
+            average = calculate_average(grades)
+            return average
+    else:
+        if identifier_exists(identifiers):
+            content = read_data()
+            grades = []
+            for grade in content['Grades'] :
+                gradeIdentifiers = grade['Identifiers']
+                if Absolute:
+                    if grade['Identifiers'] == identifiers:
+                        grades.append(grade['Grade'])
+                else: 
+                    if identifiers in gradeIdentifiers:
+                        grades.append(grade['Grade'])
+            average = calculate_average(grades)
+            return average
+        else : return 'identifier does not exist'
 
 #saves a grade based on given data
 @eel.expose
-def save_grade(subject,grade,type):
+def save_grade(subject,grade,identifiers='',tags=''):
     global Grade_count
 
     new_grade = {
         'id': Grade_count +1,
         'Subject' : subject,
         'Grade' : grade,
-        'Type' : type,
+        'Identifiers' : identifiers,
+        'Tags' : tags,
     }
 
     content = read_data()
@@ -222,6 +289,7 @@ def is_fraction(string:str):
     if '/' in string : return True
     else : return False
 
+@eel.expose
 def fraction_convert(value:str):
     v,t = value.split('/')
     newValue = (float(v)/float(t))*100
@@ -302,20 +370,21 @@ def reset_grades():
 
 @eel.expose 
 def save_settings(theme,scheme) :
-    content = read_data()
+    content = read_data(user_data_file_dir)
     content["User-settings"]["Theme"] = theme
     content["User-settings"]["Color-scheme"] = scheme
-    write_data(content)
+    write_data(content,user_data_file_dir)
 
 @eel.expose
 def get_settings():
-    content = read_data()
+    content = read_data(user_data_file_dir)
     return content['User-settings']
 
 @eel.expose
 def reset_settings():
-    content = read_data()
+    content = read_data(user_data_file_dir)
     content['User-settings'].clear()
-    write_data(content)
+    write_data(content,user_data_file_dir)
 
-eel.start("Gui.html",size=(500,600))
+if __name__ == '__main__' :
+    eel.start("Gui.html",size=(500,600))

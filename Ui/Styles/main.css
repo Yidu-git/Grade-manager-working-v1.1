@@ -121,6 +121,7 @@ body {
     flex-flow: column;
     background-repeat:no-repeat;
     background-image: linear-gradient(130deg in oklab, var(--bg), color-mix(in oklab,var(--bg) 90%,rgb(121, 121, 121)));
+    overflow: hidden;
 }
 
 .header {
@@ -345,10 +346,31 @@ button.icon span {
     appearance: none;
 }
 
+.File-Choice {
+    display: none;
+    appearance: none;
+}
+
+.File-Choice label {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%,0);
+}
+
 .checkbox.cancel::before {
     content: '❌';
     position: relative;
-    top: -.2rem;
-    left: -.2rem;
+    padding: 10px;
+    border-radius: 0px 1000px 1000px 0px;
+    background-color: var(--bg);
+    top: 50%;
+    transform: translate(-50%,0);
+    left: -30%;
     filter: grayscale();
+    visibility: hidden;
+}
+
+.grade:hover .checkbox.cancel::before {
+    content: '❌';
+    visibility: visible;
 }

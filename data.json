@@ -1,1 +1,1 @@
-{"Grades": [], "Subjects": [], "Types": [], "User-settings": {"Theme": "Light", "Color-scheme": "Red"}}
+{"Grades": [{"id": 1, "Subject": "Science", "Grade": "90", "Identifiers": "", "Tags": ""}], "Subjects": ["Science"], "Identifiers": [""], "Version": 1.2}

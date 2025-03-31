@@ -31,7 +31,12 @@
             <li id="Average-label">Avarage : </li> <br>
             <li class="A" id="Average-rating">.</li> <br>
             <input list="Subjects" class="switch main fill" id="Average-subject" placeholder="Enter a subject (All for all)"> <br>
-            <input list="Types" class="switch main fill" id="Average-type" placeholder="Enter a type (All for all)"> <br>
+            <div style="display: flex;flex-direction: row; gap: 10px;">
+                <input list="Types" class="switch main fill" id="Average-Identifiers" placeholder="Enter Identifiers (All for all)"> 
+                <input type="checkbox" class="checkbox" id="Average-Identifiers-absolute">
+            </div>
+            <br>
+            <input list="Types" class="switch main fill" id="Average-Tags" placeholder="Enter Tags (All for all) **Work in progress**"> <br>
             <button class="button primary" id="Calculate-average-button" >Calculate</button>
         </div>
 
@@ -71,6 +76,13 @@
                 <li style="text-align: left;">Grades</li>
                 <button class="button secondary" id="Reset-Grades" >Reset grades</button>
             </div>
+            <br>
+            <li style="text-align: left;font-weight: 300;">Files</li>
+            <!-- <input class="File-Choice" type="file" name="DataFile" id="DataFile" accept=".json">
+            <label for="DataFile" class="button primary">
+                <span>Open File</span>
+            </label> -->
+            <button class="button primary" id="DataFile">Open File</button>
         </div>
 
         <!-- Remove grade popover -->
@@ -96,7 +108,8 @@
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
                 <input type="text" class="Input" placeholder="Enter a score" id="Score-input">
                 <input class="Input" list="Subjects" name="Subjects" id="Subject-input" placeholder="Pick a subject">
-                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="What type of grade is it? (Test by default)">
+                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="(Identifiers) type term year">
+                <input class="Input" list="Types" name="Types" id="Grade-tags-input" placeholder="(tags) important">
                 <button class="button primary" id="Submit-button" popovertarget="Popover" popovertargetaction="hide">Submit</button>
                 <button class="button primary" id="Subject-add-button" >Add subject</button>
             </div>
@@ -116,7 +129,6 @@
                     <th class="Table head">Subject</th>  
                     <th class="Table head">Score</th>
                     <th class="Table head">Rating</th>
-                    <th class="Table head">Remove</th>
                 </thead>
                 <hr style="width: 100%;">
                 <br>

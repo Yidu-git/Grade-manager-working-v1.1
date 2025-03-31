@@ -4,13 +4,15 @@ const grade_submit = document.getElementById('Submit-button')
 const subject_input = document.getElementById('Subject-input')
 const subject_add_button = document.getElementById('Subject-add-button')
 const grade_type_input = document.getElementById('Grade-type-input')
+const grade_tags_input = document.getElementById('Grade-tags-input')
 
 let average = 0
 
 // Aveage form
 const calculate_average_button = document.getElementById('Calculate-average-button')
 const subject_avg_input = document.getElementById('Average-subject')
-const type_avg_input = document.getElementById('Average-type')
+const type_avg_input = document.getElementById('Average-Identifiers')
+const type_avg_absolte = document.getElementById('Average-Identifiers-absolute')
 const average_rating = document.getElementById('Average-rating')
 
 // Table
@@ -43,6 +45,9 @@ const TypeData = document.getElementById('Types')
 
 // Notification
 const Notification_popover = document.getElementById('Notification-popover')
+
+// File
+const DataFileInpt = document.getElementById('DataFile')
 
 function Apply_settings(settings) {
     if (settings != {}) {
@@ -82,25 +87,29 @@ function check_if_new_subject(subject) {
     })
 }
 
-function Display_type(type) {
+function Display_identifier(identifier) {
     let opt = document.createElement('option')
-    opt.setAttribute('value', type)
+    opt.setAttribute('value', identifier)
+    opt.setAttribute('id','identifier-opt')
     document.getElementById('Types').appendChild(opt)
 }
 
-function Display_types(types) {
-    for (let type in types) {
-        Display_type(types[type])
-        // alert(types[type])
+function removeIdentifiers() {
+    document.querySelectorAll('#identifier-opt').remove()
+}
+
+function Display_identifiers(identifiers) {
+    for (let i in identifiers) {
+        Display_identifier(identifiers[i])
     }
 }
 
-function check_if_new_type(type) {
-    eel.get_types()(result => {
-        if (!result.includes(type)) {
-            eel.save_type(type)
+function check_if_new_type(identifier) {
+    eel.get_identifiers()(result => {
+        if (!result.includes(identifier)) {
+            eel.save_identifier(identifier)
             // alert(type)
-            Display_type(type)
+            Display_type(identifier)
         }
     })
 }
@@ -108,7 +117,12 @@ function check_if_new_type(type) {
 function Display_subject(subject) {
     let option = document.createElement('option')
     option.setAttribute('value', subject)
+    option.setAttribute('id', 'subject-opt')
     document.getElementById('Subjects').appendChild(option)
+}
+
+function removeSubjectsDisplay() {
+    document.querySelectorAll('#subject-opt').remove()
 }
 
 function Display_subjects(subjects) {
@@ -144,7 +158,7 @@ async function Grade_count() {
 }
 
 let id1 = 0
-function display_grade(subject, grade, type, id) {
+function display_grade(subject, grade, identifiers, tags, id) {
     let tr = document.createElement('tr')
     let td_subject = document.createElement('td')
     let td_score = document.createElement('td')
@@ -174,7 +188,7 @@ function display_grade(subject, grade, type, id) {
     // console.log(id1)
 
 
-    td_subject.innerText = subject + ' (' + type + ')'
+    td_subject.innerText = subject + ' (' + identifiers + ')'
     td_score.innerText = grade
 
     let check = document.createElement("input")
@@ -218,26 +232,29 @@ function display_grade(subject, grade, type, id) {
     tr.appendChild(td_remove)
 
     tr.setAttribute('id', 'grade' + '.' + id)
+    tr.setAttribute('class', 'grade')
     grade_table_body.appendChild(tr)
 }
 
 function display_all_grades(grades) {
     for (let grade of grades['Grades']) {
-        display_grade(grade['Subject'], grade['Grade'], grade['Type'], grade['id'])
+        display_grade(grade['Subject'], grade['Grade'], grade['Identifiers'], grade['Tags'], grade['id'])
     }
 }
 
 function show_grade() {
     let grade = grade_input.value
     let subject = subject_input.value
-    let type = grade_type_input.value
+    let identiyfers = grade_type_input.value
+    let tags = grade_tags_input.value
 
-    display_grade(subject, grade, type, '')
+    display_grade(subject, grade, identiyfers,tags)
 
     grade_input.value = ''
     subject_input.value = ''
+    grade_type_input.value = ''
 
-    eel.save_grade(subject, grade, type)
+    eel.save_grade(subject, grade, identiyfers,tags)
 }
 
 function delete_grades() {
@@ -249,7 +266,12 @@ function delete_grades() {
 
 function calculate_average(value) {
     average = value
+    let label = document.getElementById('Average-label')
     // alert(average)
+    
+    label.innerHTML = 'Average : ' + average
+    average_rating.setAttribute('class', check_rating(average))
+    average_rating.innerHTML = check_rating(average)
 }
 
 // alert(eel.return_test()(result => { return() => result}))
@@ -268,13 +290,10 @@ grade_reset_button.addEventListener("click", (event) => {
 })
 
 calculate_average_button.addEventListener("click", (event) => {
-    let label = document.getElementById('Average-label')
+    let absolute = type_avg_absolte.checked
     if (subject_avg_input.value == 'All' | subject_avg_input.value == 'ALL' | subject_avg_input == 'all' | subject_avg_input == '') { eel.get_grades_average()(calculate_average) }
-    else { eel.get_average(subject_avg_input.value, type_avg_input.value)(calculate_average) }
-
-    label.innerHTML = 'Average : ' + average
-    average_rating.setAttribute('class', check_rating(average))
-    average_rating.innerHTML = check_rating(average)
+    else {eel.get_average(subject_avg_input.value, type_avg_input.value,absolute)(calculate_average) }
+    // alert(absolute)
 })
 
 subject_reset_button.addEventListener("click", (event) => {
@@ -307,11 +326,30 @@ reload_btn.addEventListener('click', (event) => {
 
     eel.check_gradecount()
     eel.get_settings()(Apply_settings)
+    removeIdentifiers()
+    eel.get_identifiers()(Display_identifiers)
     // eel.read_subjects()(Display_subjects)
     eel.get_grades()(display_all_grades)
 })
 
-eel.get_types()(Display_types)
+DataFileInpt.addEventListener('click' , (event) => {
+    eel.openFile()
+    
+    delete_grades()
+    // alert('Hello')
+
+    eel.check_gradecount()
+    removeIdentifiers()
+    eel.get_identifiers()(Display_identifiers)
+    eel.get_settings()(Apply_settings)
+    
+    // eel.read_subjects()(Display_subjects)
+    eel.get_grades()(display_all_grades)
+})
+
+
+
+eel.get_identifiers()(Display_identifiers)
 eel.get_settings()(Apply_settings)
 eel.read_subjects()(Display_subjects)
 eel.get_grades()(display_all_grades)
