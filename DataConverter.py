@@ -21,8 +21,8 @@ def convert(dataLocation:str,DataVersion:float='',ConvertVersion:float=CurrentVe
                         NoUserSettings = True
                     with open(f'{dataLocation.replace('.json','')}UserData.Json','w') as f:
                         f.write(json.dumps(UserData))
-                    if not NoUserSettings:
-                        Data.pop('User-settings')
+                    # if not NoUserSettings:
+                    Data.pop('User-settings')
                 else :
                     Data.pop('User-settings')
                     print('User Settings Deleted')

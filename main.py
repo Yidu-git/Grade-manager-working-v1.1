@@ -3,7 +3,7 @@ import eel
 import os
 
 # default_data_file_dir = 'data.json'
-default_data_file_dir = 'Maindata.json'
+default_data_file_dir = ''
 user_data_file_dir = 'UserData.json'
 CurrentVersion = 1.2
 
@@ -16,41 +16,6 @@ if __name__ == '__main__' :
 Grade_count = 0
 
 @eel.expose
-class sort :
-    def __init__(self):
-        pass
-
-    def quick_sort(List,left=0,right=0 ):
-        if right > left : right=len(List) - 1
-        elif left < right :
-            paratitionPos = self.paratition(left,right)
-            self.quick_sort(List,left,paratitionPos - 1)
-            self.quick_sort(List,paratitionPos + 1,right)
-    
-    def praratition(List,left,right,dict=False,DictValue=0):
-        i = left
-        j = right - 1
-        pivot = List[right]
-
-        if not dict:
-            while i < j:
-                while i < right and List[i] < pivot:
-                    i += 1
-                while j > left and List[j] >= pivot:
-                    j -= 1
-                if i < j:
-                    List[i],List[j] = List[j],List[i]
-        if List[i] > pivot:
-            List[i], List[right] = List[right], List[i]
-
-        return i
-
-    def Sort_data(DataList,accending):
-        if type(DataList) == list:
-            return self.quick_sort(DataList)
-            # if not accending:
-
-@eel.expose
 def get_Grade_count():
     content  = read_data()
     Grade_count = len(content['Grades'])
@@ -58,6 +23,7 @@ def get_Grade_count():
     return str(Grade_count)
 
 def read_data(dataLocation=''):
+    print(default_data_file_dir)
     if dataLocation == '':
         dataLocation = default_data_file_dir
     with open(dataLocation,'r') as f:
@@ -70,6 +36,9 @@ def openFile(path):
     global default_data_file_dir
     print(path)
     print(read_data())
+    content = read_data(user_data_file_dir)
+    content['User-settings']['Current-File'] = path
+    write_data(content,user_data_file_dir)
     default_data_file_dir = path
 
 def write_data(content,dataLocation=''):
@@ -79,17 +48,26 @@ def write_data(content,dataLocation=''):
         f.write(json.dumps(content))
     return content
 
-if not os.path.exists(default_data_file_dir):
-    with open(default_data_file_dir,'x') as file:
-        file.write(json.dumps({'Grades':[],'Subjects':[],'Identifiers': [],'Version':CurrentVersion}))
+def applySettings():
+    global default_data_file_dir
+    data = read_data(user_data_file_dir)
+    default_data_file_dir = data['User-settings']['Current-File']
 
-else:
-    content  = read_data()
-    Grade_count = len(content['Grades'])
+if __name__ == '__main__':
+    applySettings()
+    print(default_data_file_dir)
+    if not os.path.exists(default_data_file_dir):
+        with open(default_data_file_dir,'x') as file:
+            file.write(json.dumps({'Grades':[],'Subjects':[],'Identifiers': [],'Version':CurrentVersion}))
 
-if not os.path.exists(user_data_file_dir):
-    with open(user_data_file_dir,'x') as file:
-        file.write(json.dumps({'User-settings':{'Theme':'Systemm','Color-scheme':"purple"}}))
+    else:
+        content  = read_data()
+        Grade_count = len(content['Grades'])
+
+    if not os.path.exists(user_data_file_dir):
+        with open(user_data_file_dir,'x') as file:
+            file.write(json.dumps({'User-settings':{'Theme':'Systemm','Color-scheme':"purple",'Current-File' : 'data.json'}}))
+
 
 def clean_up_grades():
     content = read_data()
@@ -100,7 +78,9 @@ def clean_up_grades():
             content['Subjects'].append(grade['Subject'])
     write_data(content)
 
-clean_up_grades()
+if __name__ == '__main__':
+    applySettings()
+    clean_up_grades()
 
 @eel.expose
 def check_gradecount():
@@ -139,14 +119,14 @@ def get_average(subject,identifier,absolute=False):
                     if i in identifier.split(' '):
                         identifierCount += 1
                 if identifierCount == len(identifier.split(' ')): Identifier = True
-                if grade['Subject'] == subject and Identifier == identifier :
+                if grade['Subject'] == subject and Identifier :
                     grades.append(grade['Grade'])
             else:
                 Identifier = False
                 for i in gradeIdentifiers:
                     if i in identifier.split(' '):
                         Identifier = True
-                if Identifier:
+                if Identifier and grade['Subject'] == subject:
                     grades.append(grade['Grade'])
         average = calculate_average(grades)
     print(calculate_average(grades))
@@ -211,7 +191,7 @@ def get_identifiers():
     content = read_data()
     return content['Identifiers']
 
-eel.expose
+@eel.expose
 def identifier_exists(type):
     content = read_data()
     if type in content['Identifiers'] : return True
@@ -285,8 +265,15 @@ def save_grade(subject,grade,identifiers='',tags=''):
     Grade_count += 1
 
 @eel.expose 
-def get_grades():
-    return read_data()
+def get_grades(sorted=False,accending=False):
+    content = read_data()['Grades']
+    print(sorted)
+    if sorted:
+        quickDictSoct(content,'Grade',True)
+        printDict(content)
+        if not accending:
+            content.reverse()
+    return content
 
 def is_fraction(string:str):
     if '/' in string : return True
@@ -296,7 +283,7 @@ def is_fraction(string:str):
 def fraction_convert(value:str):
     v,t = value.split('/')
     newValue = (float(v)/float(t))*100
-    return newValue
+    return round(newValue,2)
 
 def calculate_average(grades:list):
     total = 0
@@ -388,6 +375,85 @@ def reset_settings():
     content = read_data(user_data_file_dir)
     content['User-settings'].clear()
     write_data(content,user_data_file_dir)
+
+@eel.expose
+def quick_sort(List,left=0,right=None ):
+    if right == None : right=len(List) - 1
+    if left < right :
+        paratitionPos = praratition(List,left,right)
+        quick_sort(List,left,paratitionPos - 1)
+        quick_sort(List,paratitionPos + 1,right)
+
+def praratition(List,left,right,dict=False,VK=None,DictList=False):
+        i = left
+        j = right - 1
+        pivot = List[right]
+        # print(List[right])
+
+        if not dict:
+            while i < j:
+                while i < right and List[i] < pivot:
+                    i += 1
+                while j > left and List[j] >= pivot:
+                    j -= 1
+                if i < j:
+                    List[i],List[j] = List[j],List[i]
+            if List[i] > pivot:
+                List[i], List[right] = List[right], List[i]
+        if dict and VK != None and not DictList:
+            while i < j:
+                while i < right and List[i][VK] < pivot[VK]:
+                    i += 1
+                while j > left and List[j][VK] >= pivot[VK]:
+                    j -= 1
+                if i < j:
+                    List[i],List[j] = List[j],List[i]
+        if dict and VK != None and DictList:
+            while i < j:
+                while i < right and List[i][VK] < pivot[VK]:
+                    # print('awd', List[i][VK],'  ',pivot[VK] ,right,i,j)
+                    i += 1
+                while j > left and List[j][VK] >= pivot[VK]:
+                    j -= 1
+                if i < j:
+                    # print(List[i][VK],List[j][VK])
+                    List[i],List[j] = List[j],List[i]
+                    # print(List[i][VK],List[j][VK])
+            if List[i][VK] > pivot[VK]:
+                List[i], List[right] = List[right], List[i]
+        return i
+
+@eel.expose
+def quickDictSoct(Dict,ValueKey,List=False,left=0,right=None):
+    if right == None:
+        right = len(Dict) - 1
+    # print('L & R : ',left,right)
+
+    if not List:
+        for i in Dict:
+            if '/' in str(Dict[ValueKey]):
+                Dict[ValueKey] = fraction_convert(Dict[ValueKey])
+            if type(Dict[ValueKey]) == str:
+                Dict[ValueKey] == float(Dict[ValueKey])
+    
+        if left < right:
+            praratitionPos = praratition(Dict,left,right,True,ValueKey)
+            quickDictSoct(Dict,ValueKey,False,left, praratitionPos - 1)
+            quickDictSoct(Dict,ValueKey,False, praratitionPos + 1,right)
+    if List:
+        for i in Dict:
+            if '/' in str(i[ValueKey]):
+                i[ValueKey] = fraction_convert(i[ValueKey])
+            if type(i[ValueKey]) == str:
+                i[ValueKey] == float(i[ValueKey])
+        if left < right:
+            praratitionPos = praratition(Dict,left,right,True,ValueKey,True)
+            quickDictSoct(Dict,ValueKey,True,left, praratitionPos - 1)
+            quickDictSoct(Dict,ValueKey,True, praratitionPos + 1,right)
+
+def printDict(dict):
+    for i in dict:
+        print(i['id'],'|',i['Subject'],'|',i['Identifiers'],'|','\033[93m',i['Grade'],'| \033[0m')
 
 if __name__ == '__main__' :
     eel.start("Gui.html",size=(500,600))

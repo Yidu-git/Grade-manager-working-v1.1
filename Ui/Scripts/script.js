@@ -74,7 +74,7 @@ function check_rating(score) {
 }
 
 function is_fraction(string) {
-    if (string.includes('/')) { return true }
+    if (String(string).includes('/')) { return true }
 }
 
 function check_if_new_subject(subject) {
@@ -97,8 +97,10 @@ function Display_identifier(identifier) {
 function removeIdentifiers() {
     let options = document.querySelectorAll('#identifier-opt')
     for (i in options) {
-        options[i].remove()
-        console.log(options[i])
+        if (i <= options[options.length - 1]){
+            options[i].remove()
+            // console.log(options[i])
+        }
     }
 }
 
@@ -128,8 +130,10 @@ function Display_subject(subject) {
 function removeSubjectsDisplay() {
     let options = document.querySelectorAll('#subject-opt')
     for (i in options) {
-        options[i].remove()
-        console.log(options[i])
+        if (i <= options[options.length - 1]){
+            options[i].remove()
+            // console.log(options[i])
+        }
     }
 }
 
@@ -239,7 +243,8 @@ function display_grade(subject, grade, identifiers, tags, id) {
 }
 
 function display_all_grades(grades) {
-    for (let grade of grades['Grades']) {
+    console.log(grades)
+    for (let grade of grades) {
         display_grade(grade['Subject'], grade['Grade'], grade['Identifiers'], grade['Tags'], grade['id'])
     }
 }
@@ -276,15 +281,15 @@ function calculate_average(value) {
     average_rating.innerHTML = check_rating(average)
 }
 
-function reload() {
+function reload(sort=false) {
     // removeSubjectsDisplay()
     removeIdentifiers()
     delete_grades()
-    eel.check_gradecount()
+    // eel.check_gradecount()
     eel.get_identifiers()(Display_identifiers)
     eel.get_settings()(Apply_settings)
     // eel.read_subjects()(Display_subjects)
-    eel.get_grades()(display_all_grades)
+    eel.get_grades(sort)(display_all_grades)
 }
 
 // alert(eel.return_test()(result => { return() => result}))
@@ -332,11 +337,7 @@ subject_add_button.addEventListener('click', (event) => {
     Display_subject(subject_input.value)
 })
 
-reload_btn.addEventListener('click', (event) => {
-    removeSubjectsDisplay()
-    delete_grades()
-    // alert('Hello')
-})
+reload_btn.addEventListener('click', () => reload(true))
 
 DataFileInpt.addEventListener('click' , (event) => {
     eel.openFile(document.getElementById('DataFileInput').value)
