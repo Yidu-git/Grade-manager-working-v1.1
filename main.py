@@ -1,16 +1,13 @@
 import json
 import eel
 import os
-from tkinter import Tk, filedialog
 
-default_data_file_dir = 'data.json'
+# default_data_file_dir = 'data.json'
+default_data_file_dir = 'Maindata.json'
 user_data_file_dir = 'UserData.json'
 CurrentVersion = 1.2
 
 dirname  = os.path.dirname(__file__ + 'Gui')
-
-root = Tk()
-root.withdraw()
 
 # eel.init(f'{os.path.dirname(os.path.realpath(__file__))}/web')
 
@@ -60,18 +57,24 @@ def get_Grade_count():
     print(Grade_count)
     return str(Grade_count)
 
-def read_data(dataLocation=default_data_file_dir):
+def read_data(dataLocation=''):
+    if dataLocation == '':
+        dataLocation = default_data_file_dir
     with open(dataLocation,'r') as f:
         content = json.loads(f.read())
+        # print(content)
         return content
 
 @eel.expose
-def openFile():
-    print()
-    path = filedialog.askopenfilename()
+def openFile(path):
+    global default_data_file_dir
+    print(path)
+    print(read_data())
     default_data_file_dir = path
 
-def write_data(content,dataLocation=default_data_file_dir):
+def write_data(content,dataLocation=''):
+    if dataLocation == '':
+        dataLocation = default_data_file_dir
     with open(dataLocation,'w') as f:
         f.write(json.dumps(content))
     return content
@@ -221,7 +224,7 @@ def get_identifier_average(identifiers,Absolute=True):
         print(identifiers)
         print(Identifiers)
         exists = False
-
+        existsCount = 0
         for i in identifiers.split(' '):
             if identifier_exists(identifiers): existsCount += 1
             else : return 'One or more Identifiers do not exist'

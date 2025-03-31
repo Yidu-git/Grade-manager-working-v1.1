@@ -82,7 +82,8 @@
             <label for="DataFile" class="button primary">
                 <span>Open File</span>
             </label> -->
-            <button class="button primary" id="DataFile">Open File</button>
+            <input type="text" class="Input primary" id="DataFileInput" placeholder="Input direct filepath">
+            <button class="button primary" id="DataFile">Submit File</button>
         </div>
 
         <!-- Remove grade popover -->
@@ -123,7 +124,11 @@
             <!-- Types get added here -->
         </datalist>
 
-        <div>
+        <datalist id="Tags">
+            <!-- Tags get added here -->
+        </datalist>
+
+        <div class="outer">
             <table class="Table Main">
                 <thead class="Table head">
                     <th class="Table head">Subject</th>  
@@ -133,6 +138,11 @@
                 <hr style="width: 100%;">
                 <br>
                 <tbody class="Table body" id="table-body">
+                    <!-- <tr>
+                        <td>fea</td>
+                        <td>waf</td>
+                        <td>awf</td>
+                    </tr> -->
                 </tbody>
             </table>
         </div>

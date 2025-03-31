@@ -33,7 +33,7 @@
     :root {
         --bg: rgb(28, 27, 29);
         --text-main: rgb(237, 234, 229);
-        --box-shadow: 0px 5px 30px -10px color-mix(in oklab,var(--primary-shadow)10%,rgb(0, 0, 0));
+        --box-shadow: 0px 5px 30px -10px color-mix(in oklab,var(--primary-shadow)50%,rgb(0, 0, 0));
         --brightness: 150%;
     }
 }
@@ -141,10 +141,6 @@ body {
     box-shadow: var(--box-shadow);
 }
 
-tr {
-    border: 10px #00000050;
-}
-
 @font-face {
     font-family: 'Montserrat';
     src: url('/Fonts/Montserrat-VariableFont_wght.ttf');
@@ -189,6 +185,13 @@ tr {
     border-color: var(--primary);
 }
 
+.Input.primary {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 450;
+    padding: 5px 10px;
+}
+
 .header span{
     font-weight: 600;
     color: var(--primary);
@@ -209,7 +212,7 @@ tr {
     border: none;
     border-radius: 10px;
     height: max-content;
-    box-shadow: var(--box-shadow)
+    box-shadow: var(--box-shadow);
 }
 
 .table.title {
@@ -220,8 +223,34 @@ tr {
     width: 100%;
 }
 
+.outer {
+    overflow-y: auto;
+    height: 300px;
+}
+
+.outer {
+    width: 100%;
+}
+
+.outer th {
+    text-align: center;
+    top: -1px;
+    position: sticky;
+    background-color: var(--bg);
+    border-radius: 5px ;
+    border-style: solid;
+    border-color: color-mix(in oklab,var(--primary)90%,rgb(0, 0, 0));
+    border-width: 2px;
+}
+
+::-webkit-scrollbar {
+    appearance: none;
+    display: none;
+}
+
 .Table {
     width: 100%;
+    height: 100%;
     table-layout: fixed;
 }
 
@@ -233,12 +262,16 @@ tr {
 .Table.head {
     font-size: 24px;
     font-weight: 450;
+    height: fit-content;
 } 
 
 .Table.body {
     table-layout: fixed;
-    font-size: 20px;
-    font-weight: 300;
+    font-size: 18px;
+    font-weight: 250;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
 }
 
 .button {
@@ -331,6 +364,9 @@ button.icon span {
 .switch.main {
     background-color: color-mix(in oklab,var(--bg) 95% ,var(--primary));
     border-style: solid;
+    text-align: center;
+    border-width: 3px;
+    border-color: var(--primary);
     height: 25px;
     width: 100px;
     border-radius: 1000px;
@@ -355,6 +391,10 @@ button.icon span {
     position: relative;
     left: 50%;
     transform: translate(-50%,0);
+}
+
+.checkbox.cancel {
+    position: relative;
 }
 
 .checkbox.cancel::before {
