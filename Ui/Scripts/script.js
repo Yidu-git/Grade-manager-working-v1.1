@@ -34,7 +34,7 @@ const grade_remove_button = document.getElementById('Remove-Grade')
 // Subject
 const subject_reset_button = document.getElementById('Reset-Subjects')
 const subject_remove_button = document.getElementById('Remove-Subject')
-const subject_remove_input = document.getElementById('Grade-remove-select')
+const subject_remove_input = document.getElementById('Subject-remove-select')
 
 // Reload
 const reload_btn = document.getElementById('Reload-button')
@@ -48,6 +48,10 @@ const Notification_popover = document.getElementById('Notification-popover')
 
 // File
 const DataFileInpt = document.getElementById('DataFile')
+
+// Sorting
+const SortinBtn = document.getElementById('Sort')
+const SortinFilter = document.getElementById('SortValue')
 
 function Apply_settings(settings) {
     if (settings != {}) {
@@ -281,7 +285,7 @@ function calculate_average(value) {
     average_rating.innerHTML = check_rating(average)
 }
 
-function reload(sort=false) {
+function reload(sort=false,acending=false) {
     // removeSubjectsDisplay()
     removeIdentifiers()
     delete_grades()
@@ -289,7 +293,7 @@ function reload(sort=false) {
     eel.get_identifiers()(Display_identifiers)
     eel.get_settings()(Apply_settings)
     // eel.read_subjects()(Display_subjects)
-    eel.get_grades(sort)(display_all_grades)
+    eel.get_grades(sort,acending)(display_all_grades)
 }
 
 // alert(eel.return_test()(result => { return() => result}))
@@ -337,7 +341,7 @@ subject_add_button.addEventListener('click', (event) => {
     Display_subject(subject_input.value)
 })
 
-reload_btn.addEventListener('click', () => reload(true))
+reload_btn.addEventListener('click', () => reload())
 
 DataFileInpt.addEventListener('click' , (event) => {
     eel.openFile(document.getElementById('DataFileInput').value)

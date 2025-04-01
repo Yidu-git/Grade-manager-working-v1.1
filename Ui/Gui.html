@@ -7,27 +7,28 @@
 
     <link rel="stylesheet" href="Styles/main.css">
     <link rel="stylesheet" href="Styles/Ratings.css">
+    <link rel="stylesheet" href="Styles/Icons.css">
 </head>
 <body>
     
     <div class="header">
         <p class="web_name" id="web_name">Grade <span>Manager</span></p>
-        <button class="button settings" popovertarget="Settings-popover"></button>
+        <button class="button settings icon" popovertarget="Settings-popover"></button>
     </div>
 
     <div class="table container">
         <div class="table title">
             <li>Grades</li>
-            <div>
+            <div style="display: flex; gap: 5px; text-align: center; justify-content: center; align-content: center;">
                 <button class="button primary" popovertarget="Popover">+</button>
-                <button class="button secondary" popovertarget="Average-popover">●●●</button>
-                <button class="button secondary" id="Reload-button">reload</button>
+                <button class="button secondary" popovertarget="Average-popover">Average</button>
+                <button class="button secondary refresh icon" id="Reload-button"></button>
             </div>
         </div>
 
         <!-- Average popover -->
         <div class="popover" id="Average-popover" popover>
-            <button popovertarget="Average-popover" popovertargetaction="hide" class="icon"><span>❌</span></button>
+            <button popovertarget="Average-popover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
             <li id="Average-label">Avarage : </li> <br>
             <li class="A" id="Average-rating">.</li> <br>
             <input list="Subjects" class="switch main fill" id="Average-subject" placeholder="Enter a subject (All for all)"> <br>
@@ -42,7 +43,7 @@
 
         <!-- Settings popover -->
         <div class="popover settings" id="Settings-popover" popover>
-            <button popovertarget="Settings-popover" popovertargetaction="hide" class="icon" id="exit-settings"><span>❌</span></button>
+            <button popovertarget="Settings-popover" popovertargetaction="hide" class="xicon" id="exit-settings"><span>❌</span></button>
             <li>Settings</li> 
             <br style="font-size: smaller;"> <hr> <br>
             <label class="switch">
@@ -69,12 +70,12 @@
             <br>
             <div style="display: flex;flex-direction: column; gap: 10px;">
                 <li style="text-align: left;">Subjects</li>
-                <div style="display: flex;">
-                    <button class="button secondary fill" id="Reset-Subjects">Reset subjects</button>
-                    <button class="button secondary fill" popovertarget="Subject-remove-popover">Remove subject</button> <br>
+                <div style="display: flex; gap: 10px;">
+                    <button class="button fill cancel" id="Reset-Subjects">Reset subjects</button>
+                    <button class="button fill cancel" popovertarget="Subject-remove-popover">Remove subject</button>
                 </div>
                 <li style="text-align: left;">Grades</li>
-                <button class="button secondary" id="Reset-Grades" >Reset grades</button>
+                <button class="button cancel" id="Reset-Grades" >Reset grades</button>
             </div>
             <br>
             <li style="text-align: left;font-weight: 300;">Files</li>
@@ -84,27 +85,18 @@
             </label> -->
             <input type="text" class="Input primary" id="DataFileInput" placeholder="Input direct filepath">
             <button class="button primary" id="DataFile">Submit File</button>
-        </div>
-
-        <!-- Remove grade popover -->
-        <div class="popover" id="Grade-remove-popover" popover>
-            <li>Remove grade</li> <br>
-            <select class="switch main" name="Grade select" id="Grade-select">
-                <!-- Grades -->
-            </select>
-            <button class="button primary" id="Remove-Grade">Remove</button>
-        </div>
+        </div> 
 
         <!-- Reomove subject popover -->
         <div class="popover" id="Subject-remove-popover" popover>
             <li>Remove subject</li> <br>
-            <input list="Subjects" class="switch main fill" id="Grade-remove-select"> <br>
-            <button class="button primary" id="Remove-Subject" popovertarget="Subject-remove-popover" popovertargetaction="hide">Remove</button>
+            <input list="Subjects" class="switch main fill" id="Subject-remove-select" placeholder="Pick a subject to remove"> <br>
+            <button class="button  cancel" id="Remove-Subject" popovertarget="Subject-remove-popover" popovertargetaction="hide">Remove</button>
         </div>
 
         <!-- Grade entry popover -->
         <div class="popover"  id="Popover" popover >
-            <button popovertarget="Popover" popovertargetaction="hide" class="icon"><span>❌</span></button>
+            <button popovertarget="Popover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
             <p>Enter grade</p>
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
                 <input type="text" class="Input" placeholder="Enter a score" id="Score-input">

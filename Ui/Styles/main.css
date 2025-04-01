@@ -1,20 +1,18 @@
 :root {
     color-scheme: light;
-    --primary : #742bfc ;
-    --primary-hover: #9a66fa ;
-    --primary-active: #b790ff ;
-    --primary-shadow: #50039c76;
-    --bg: #f6f3ea;
-    --text-main: #1f1e1e;
 
     --cancel : #ff0554;
+    --CornerRadius-1: 20px;
+    --CornerRadius-2: 10px;
+    --CornerRadius-3: 5px;
+    --CornerRadius-button: 2px;
 }
 
 :root:has(#theme [value='Light']:checked) {
     color-scheme: light;
-    --bg: #f6f3ea;
+    --bg: #f6f4f4;
     --text-main: #1f1e1e;
-    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)80%,rgb(69, 69, 70));
+    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
     --brightness: 0%;
 }
 
@@ -31,9 +29,9 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: rgb(28, 27, 29);
+        --bg: rgb(25, 24, 26);
         --text-main: rgb(237, 234, 229);
-        --box-shadow: 0px 5px 30px -10px color-mix(in oklab,var(--primary-shadow)50%,rgb(0, 0, 0));
+        --box-shadow: 0px 5px 15px -0px color-mix(in oklab,var(--primary-shadow)50%,rgba(0, 0, 0, 0.734));
         --brightness: 150%;
     }
 }
@@ -42,16 +40,20 @@
     :root {
     --bg: #edeadf;
     --text-main: #1f1e1e;
-    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)80%,rgb(69, 69, 70));
+    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
     }
 }
 
-:root:has(#Color-theme [value='Purple']:checked) {
+:root:has(#Color-scheme [value='Purple']:checked) {
     color-scheme: light;
     --primary : #742bfc ;
     --primary-hover: #9a66fa ;
     --primary-active: #b790ff ;
     --primary-shadow: #50039c76;
+    --secondary : #bf50ff ;
+    --secondary-hover: #a050d5 ;
+    --secondary-active: #e090ff ;
+    --secondary-shadow: #3b008976;
 }
 
 :root:has(#Color-scheme [value='Red']:checked) {
@@ -59,6 +61,10 @@
     --primary-hover: #fa6686 ;
     --primary-active: #ff9090 ;
     --primary-shadow: #9c032c76;
+    --secondary : #ff50d6 ;
+    --secondary-hover: #d550c3 ;
+    --secondary-active: #ff90f2 ;
+    --secondary-shadow: #84008976;
 }
 
 :root:has(#Color-scheme [value='Blue']:checked) {
@@ -66,6 +72,10 @@
     --primary-hover: #6666fa ;
     --primary-active: #9490ff ;
     --primary-shadow: #03069c76;
+    --secondary : #506aff ;
+    --secondary-hover: #5076d5 ;
+    --secondary-active: #90b9ff ;
+    --secondary-shadow: #00328976;
 }
 
 :root:has(#Color-scheme [value='Green']:checked) {
@@ -73,16 +83,21 @@
     --primary-hover: #66fab5 ;
     --primary-active: #90ffe7 ;
     --primary-shadow: #05890076;
+    --secondary : #50ffc2 ;
+    --secondary-hover: #50d3d5 ;
+    --secondary-active: #90fff0 ;
+    --secondary-shadow: #00728976;
 }
 
 :root:has(#Color-scheme [value='Mint']:checked) {
     --primary : #03b5d0 ;
     --primary-hover: #50d5c1 ;
     --primary-active: #90ffd3 ;
+    --primary-shadow: #50d1c242;
     --secondary : #ff50d6 ;
     --secondary-hover: #d550c3 ;
     --secondary-active: #ff90f2 ;
-    --primary-shadow: #00728976;
+    --secondary-shadow: #00728976;
 }
 
 :root:has(#Color-scheme [value='Orange']:checked) {
@@ -90,6 +105,10 @@
     --primary-hover: #ffd760 ;
     --primary-active: #fdff90 ;
     --primary-shadow: #897e0076;
+    --secondary : #ffaa50 ;
+    --secondary-hover: #d59950 ;
+    --secondary-active: #ffc890 ;
+    --secondary-shadow: #89400076;
 }
 
 :root:has(#Color-scheme [value='Magenta']:checked) {
@@ -97,6 +116,10 @@
     --primary-hover: #f766fa ;
     --primary-active: #fb90ff ;
     --primary-shadow: #92039c76;
+    --secondary : #ff50d6 ;
+    --secondary-hover: #d550c3 ;
+    --secondary-active: #ff90f2 ;
+    --secondary-shadow: #00728976;
 }
 
 html {
@@ -120,7 +143,7 @@ body {
     display: flex;
     flex-flow: column;
     background-repeat:no-repeat;
-    background-image: linear-gradient(130deg in oklab, var(--bg), color-mix(in oklab,var(--bg) 90%,rgb(121, 121, 121)));
+    background-image: linear-gradient(130deg in oklab, color-mix(in oklab,var(--bg) 85%,var(--primary)), color-mix(in oklab,var(--bg) 90%,var(--secondary)));
     overflow: hidden;
 }
 
@@ -128,7 +151,7 @@ body {
     color: var(--text-main);
     display: flex;
     justify-content:space-evenly;
-    border-radius: 0px 0px 15px 15px;
+    border-radius: 0px 0px var(--CornerRadius-2) var(--CornerRadius-2);
     background-color: var(--bg);
     position: absolute;
     align-items: center;
@@ -162,7 +185,7 @@ body {
     background-color: var(--bg);
     padding: 20px;
     border: none;
-    border-radius: 20px;
+    border-radius: var(--CornerRadius-1);
     box-shadow: var(--box-shadow);
 }
 
@@ -172,6 +195,13 @@ body {
 
 .popover p {
     text-align: left;
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.popover li {
+    font-size: 25px;
+    font-weight: 300;
 }
 
 .Input {
@@ -179,7 +209,7 @@ body {
     padding: 0px 10px;
     background-color: color-mix(in oklab,var(--bg) 95%,white);
     height: 20px;
-    border-radius: 1000px;
+    border-radius: var(--CornerRadius-button);
     border: solid;
     border-width: 2px;
     border-color: var(--primary);
@@ -206,11 +236,11 @@ body {
     padding: 10px 15px ;
     gap: 15px;
     justify-content: center;
-    background-color: var(--bg);
+    background-color: color-mix(in oklab,var(--bg) 95%,#373737);
     font-size: 24px;
     font-weight: 500;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--CornerRadius-2);
     height: max-content;
     box-shadow: var(--box-shadow);
 }
@@ -219,6 +249,9 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    text-align: center;
+    align-content: center;
+    align-items: center;
     padding: 10px 0px;
     width: 100%;
 }
@@ -235,7 +268,7 @@ body {
     top: -1px;
     position: sticky;
     background-color: var(--bg);
-    border-radius: 5px;
+    border-radius: var(--CornerRadius-3);
     border-style: solid;
     border-color: color-mix(in oklab,var(--primary)90%,rgb(0, 0, 0));
     border-width: 2px;
@@ -282,7 +315,7 @@ th {
     font-size: 16px;
     font-weight: 500;
     border: none;
-    border-radius: 1000px;
+    border-radius: var(--CornerRadius-button);
     transition: all 200ms;
 }
 
@@ -291,7 +324,7 @@ th {
 }
 
 .button:active {
-    box-shadow: 0px 0px 0px 0px  #50505039;
+    box-shadow: none;
 }
 
 .button.primary {
@@ -300,24 +333,41 @@ th {
 
 .button.primary:hover {
     background-color: var(--primary-hover);
+    box-shadow: 0px 5px 5px 0px  color-mix(in oklab,var(--primary)60%,var(--bg));
 }
 
 .button.primary:active {
     background-color: var(--primary-active);
+    box-shadow: none;
 }
 
 .button.secondary {
-    background-color: #1f1e1e;
-    outline: 5px solid var(--primary);
+    /* background-color: #1f1e1e; */
+    background-color: var(--secondary);
+    /* outline: 5px solid var(--primary); */
     outline-offset: -2.5px;
 }
 
 .button.secondary:hover {
-    box-shadow: 0px 5px 10px -1px var(--primary);
+    box-shadow: 0px 5px 5px 0px  color-mix(in hsl,var(--secondary)40%,var(--bg));
 }
 
 .button.secondary:active {
-    background-color: var(--primary);
+    background-color: var(--secondary-active);
+    box-shadow: none;
+}
+.button.cancel {
+    background-color: var(--cancel);
+}
+
+.button.cancel:hover {
+    box-shadow: 0px 5px 5px 0px color-mix(in hsl, var(--cancel)60%, var(--bg));
+    background-color: color-mix(in oklab, var(--cancel)90%, #ffffff);
+}
+
+.button.cancel:active {
+    background-color: color-mix(in oklab, var(--cancel)60%, #ffffff);
+    box-shadow: none;
 }
 
 .fill{
@@ -330,17 +380,18 @@ th {
     background-position: center;
     background-repeat:no-repeat;
     background-size: 25px;
+    padding: 16px;
     width: 30px;
     height: 30px;
-    padding: 0px;
 }
+
 
 .button.settings:hover {
     background-color: var(--primary-hover);
     box-shadow: 0px 0px 15px -3px var(--primary);
 }
 
-button.icon {
+button.xicon {
     background: none;
     border: none;
     cursor: pointer;
@@ -353,8 +404,15 @@ button.icon {
     padding: .7rem;
 }
 
-button.icon span {
+button.xicon span {
     filter: invert(100%) brightness(var(--brightness));
+}
+
+button.icon {
+    border-radius: var(--CornerRadius-button);
+    padding: 15px 20px;
+    margin: 0px;
+    position: relative;
 }
 
 .switch {
@@ -370,15 +428,21 @@ button.icon span {
     border-color: var(--primary);
     height: 25px;
     width: 100px;
-    border-radius: 1000px;
+    border-radius: var(--CornerRadius-button);
     padding: 0px 10px;
 }
 
 .switch.main.prim {
+    padding: 0px 15px;
+    height: fit-content;
     font-size: 18px;
+    font-weight: 200;
     text-align: center;
+    vertical-align: middle;
     align-content: center;
     justify-content: center;
+    align-items: center;
+    justify-items: center;
     width: fit-content;
 }
 
