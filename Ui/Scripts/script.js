@@ -8,12 +8,19 @@ const grade_tags_input = document.getElementById('Grade-tags-input')
 
 let average = 0
 
+// ------------ Data form --------------
 // Aveage form
 const calculate_average_button = document.getElementById('Calculate-average-button')
 const subject_avg_input = document.getElementById('Average-subject')
 const type_avg_input = document.getElementById('Average-Identifiers')
 const type_avg_absolte = document.getElementById('Average-Identifiers-absolute')
 const average_rating = document.getElementById('Average-rating')
+// Sorting
+const SortinBtn = document.getElementById('Sort')
+const SortinFilter = document.getElementById('SortValue')
+// Graphing
+var GraphDisplay = document.getElementById('Graph-display').getContext('2d');
+const GraphDisplayBtn = document.getElementById('Generate-graph-button')
 
 // Table
 const grade_table_body = document.getElementById('table-body')
@@ -49,10 +56,6 @@ const Notification_popover = document.getElementById('Notification-popover')
 // File
 const DataFileInpt = document.getElementById('DataFile')
 
-// Sorting
-const SortinBtn = document.getElementById('Sort')
-const SortinFilter = document.getElementById('SortValue')
-
 function Apply_settings(settings) {
     if (settings != {}) {
         Theme.value = settings['Theme']
@@ -79,6 +82,20 @@ function check_rating(score) {
 
 function is_fraction(string) {
     if (String(string).includes('/')) { return true }
+}
+
+function fractionConvert(value) {
+    let Rvalue = 0
+    if (String(value).includes('/')) {
+        let values = value.split('/')
+        let a = values[0]
+        let b = values[1]
+        Rvalue = (Math.round((a/b) * 10000) / 100)
+    } else {
+        Rvalue = value
+    }
+    // console.log('Rvalue',Rvalue,'value',value)
+    return parseFloat(Rvalue)
 }
 
 function check_if_new_subject(subject) {
@@ -296,7 +313,113 @@ function reload(sort=false,acending=false) {
     eel.get_grades(sort,acending)(display_all_grades)
 }
 
+function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=false) {
+    let subjects = []
+    let Identifiers = []
+    let tags = []
+    let values = []
+
+    if (ByIdentifiers || ByTags) {BySubject=false}
+
+    // --------------------------------------------- Subjects ------------------------------------------
+    if (BySubject) {
+        let GraphDict = {}
+        let SubjectCount = {}
+        for (let i of grades) {
+            // console.log(i['Subject'])
+            if (!subjects.includes(i['Subject'])) {
+                subjects.push(i['Subject'])
+                SubjectCount[i['Subject']] = [0,0]
+            }
+        }
+
+        for (let i of grades) {
+            // console.log(i['Grade'])
+            i['Grade'] = fractionConvert(String(i['Grade']))
+            // console.log(i['Grade'])
+            // console.log(i['Subject'])
+            SubjectCount[i['Subject']][0] += 1
+            SubjectCount[i['Subject']][1] += i['Grade']
+            // console.log()
+            console.log('sub[1]  ',i['Subject'] ,SubjectCount[i['Subject']][1])
+        }
+
+        console.log(SubjectCount)
+
+        for (grade in SubjectCount) {
+            // console.log(grade)
+            GraphDict[grade] = SubjectCount[grade][1]/SubjectCount[grade][0]
+        }
+        // console.log(SubjectCount)
+        // console.log(GraphDict)
+        
+        for (i in GraphDict) {
+            // console.log(i)
+            values.push(GraphDict[i])
+        }
+        console.log('Values' , values)
+
+        let labels = subjects
+        let data = {
+            labels: labels,
+            datasets: [{
+                label: 'Term1',
+                data: values,
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)'
+            }]
+        }
+
+        let config = {
+            type: 'radar',
+            data: data,
+            options: {
+                maintainAspectRatio : false;
+                scales: {
+                    r: {
+                        beginAtZero : true,
+
+                    }
+                },
+                elements: {
+                    line: {
+                    borderWidth: 3
+                    }
+                },
+            },
+          };
+
+        let chart = new Chart(GraphDisplay, config)
+
+    // --------------------------------------------- Identifiers------------------------------------------
+    } else if (ByIdentifiers) {
+        for (i of grades) {
+            let Gradeidentifiers = i['Identifiers'].split(' ')
+            for (x of Gradeidentifiers) {
+                if (!Identifiers.includes(x)) {Identifiers.push(x)}
+            } 
+        }
+    } else if (ByIdentifiers) {
+        for (i of grades) {
+            let Gradetags = i['Tags'].split(' ')
+            for (x of Gradetags) {
+                if (!tags.includes(x)) {tags.push(x)}
+            } 
+        }
+    }
+
+}
+
 // alert(eel.return_test()(result => { return() => result}))
+
+GraphDisplayBtn.addEventListener('click', (event) => {
+    eel.get_grades()((result) => GenerateGradesGraph(result))
+})
 
 grade_submit.addEventListener("click", (event) => {
     check_if_new_subject(subject_input.value)
@@ -348,8 +471,6 @@ DataFileInpt.addEventListener('click' , (event) => {
     
     reload()
 })
-
-
 
 eel.get_identifiers()(Display_identifiers)
 eel.get_settings()(Apply_settings)

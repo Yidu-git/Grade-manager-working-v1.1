@@ -31,14 +31,18 @@
             <button popovertarget="Average-popover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
             <li id="Average-label">Avarage : </li> <br>
             <li class="A" id="Average-rating">.</li> <br>
+            <img src="" alt="" id="Grade-Chart-display">
+            <canvas class="Chart radar main" id="Graph-display" width="10" height="10"></canvas>
             <input list="Subjects" class="switch main fill" id="Average-subject" placeholder="Enter a subject (All for all)"> <br>
             <div style="display: flex;flex-direction: row; gap: 10px;">
-                <input list="Types" class="switch main fill" id="Average-Identifiers" placeholder="Enter Identifiers (All for all)"> 
+                <input list="Types" class="switch main fill" id="Average-Identifiers" placeholder="Enter Identifiers (All for all)">
+                <li style="font-size: 16px; width: fit-content;">Absolute-filter</li>
                 <input type="checkbox" class="checkbox" id="Average-Identifiers-absolute">
             </div>
             <br>
             <input list="Types" class="switch main fill" id="Average-Tags" placeholder="Enter Tags (All for all) **Work in progress**"> <br>
             <button class="button primary" id="Calculate-average-button" >Calculate</button>
+            <button class="button primary" id="Generate-graph-button">Generate graph</button>
         </div>
 
         <!-- Settings popover -->
@@ -142,6 +146,9 @@
 
     <div id="Notification-popover" class="popover" popover><li style="align-self: center;"></li></div>
 
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script> -->
+    <script src="Scripts/chart.min.js"></script>
     <script src="/eel.js" ></script>
     <script src="Scripts/script.js"></script>
 </body>

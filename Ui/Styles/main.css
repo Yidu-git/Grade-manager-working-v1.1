@@ -10,7 +10,7 @@
 
 :root:has(#theme [value='Light']:checked) {
     color-scheme: light;
-    --bg: #f6f4f4;
+    --bg: #edeadf;
     --text-main: #1f1e1e;
     --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
     --brightness: 0%;
@@ -18,8 +18,9 @@
 
 :root:has(#theme [value='Dark']:checked) {
     color-scheme: dark;
-    --bg: rgb(28, 27, 29);
+    --bg: rgb(25, 24, 26);
     --text-main: rgb(237, 234, 229);
+    --box-shadow: 0px 5px 15px -0px color-mix(in oklab,var(--primary-shadow)50%,rgba(0, 0, 0, 0.734));
     --brightness: 150%;
 }
 
@@ -41,6 +42,7 @@
     --bg: #edeadf;
     --text-main: #1f1e1e;
     --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
+    --brightness: 0%;    
     }
 }
 
@@ -83,7 +85,7 @@
     --primary-hover: #66fab5 ;
     --primary-active: #90ffe7 ;
     --primary-shadow: #05890076;
-    --secondary : #50ffc2 ;
+    --secondary : #0bea9c ;
     --secondary-hover: #50d3d5 ;
     --secondary-active: #90fff0 ;
     --secondary-shadow: #00728976;
@@ -342,9 +344,7 @@ th {
 }
 
 .button.secondary {
-    /* background-color: #1f1e1e; */
     background-color: var(--secondary);
-    /* outline: 5px solid var(--primary); */
     outline-offset: -2.5px;
 }
 
@@ -423,7 +423,6 @@ button.icon {
 .switch.main {
     background-color: color-mix(in oklab,var(--bg) 95% ,var(--primary));
     border-style: solid;
-    text-align: center;
     border-width: 3px;
     border-color: var(--primary);
     height: 25px;
@@ -466,9 +465,34 @@ button.icon {
     transform: translate(-50%,0);
 }
 
+.checkbox {
+    appearance: none;
+    position: relative;
+    background-color: color-mix(in oklab,var(--bg) 90%,#fff);
+    border-style: solid;
+    border-color: var(--primary);
+    border-radius: var(--CornerRadius-3);
+    padding: 10px;
+    width: 0px;
+    height: 0px;
+    transition: background-image 0ms;
+}
+
+.checkbox:hover {
+    background-color: color-mix(in oklab,var(--bg) 70%,#fff);
+}
+
+.checkbox:checked {
+    background-color: var(--primary);
+    background-image: url(/Ui/Assets/check.svg);
+    background-size: 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .checkbox.cancel {
     position: relative;
-    /* width: 10px; */
+    border: none;
 }
 
 .checkbox.cancel::before {
@@ -487,4 +511,9 @@ button.icon {
 .grade:hover .checkbox.cancel::before {
     content: '❌';
     visibility: visible;
+}
+
+.Chart.radar.main {
+    width: 50px;
+    height: 50px;
 }

@@ -68,7 +68,6 @@ if __name__ == '__main__':
         with open(user_data_file_dir,'x') as file:
             file.write(json.dumps({'User-settings':{'Theme':'Systemm','Color-scheme':"purple",'Current-File' : 'data.json'}}))
 
-
 def clean_up_grades():
     content = read_data()
     for grade in content['Grades']:

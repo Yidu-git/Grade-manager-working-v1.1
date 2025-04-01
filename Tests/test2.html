@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <canvas id="Graph"></canvas>
+
+    <script>
+        const config = {
+        type: 'line',
+        data: data,
+        };
+        
+        const labels = Utils.months({count: 7});
+        const data = {
+        labels: labels,
+        datasets: [{
+            label: 'My First Dataset',
+            data: [65, 59, 80, 81, 56, 55, 40],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+        };
+
+        const ctx = document.getElementById('Graph').getContext('2d')
+
+        var graph = new Chart(ctx,config)
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="chart.min.js"></script>
+</body>
+</html>
