@@ -16,7 +16,7 @@ const type_avg_input = document.getElementById('Average-Identifiers')
 const type_avg_absolte = document.getElementById('Average-Identifiers-absolute')
 const average_rating = document.getElementById('Average-rating')
 // Sorting
-const SortinBtn = document.getElementById('Sort')
+const SortinBtn = document.getElementById('Sort-button')
 const SortinFilter = document.getElementById('SortValue')
 // Graphing
 var GraphDisplay = document.getElementById('Graph-display').getContext('2d');
@@ -55,6 +55,8 @@ const Notification_popover = document.getElementById('Notification-popover')
 
 // File
 const DataFileInpt = document.getElementById('DataFile')
+
+let chart = undefined
 
 function Apply_settings(settings) {
     if (settings != {}) {
@@ -313,17 +315,85 @@ function reload(sort=false,acending=false) {
     eel.get_grades(sort,acending)(display_all_grades)
 }
 
+function DrawGraph(canvas,radar=false,Labels,values) {
+        let data = {
+            labels: Labels,
+            datasets: [{
+                label: 'Term1',
+                data: values,
+                fill: true,
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-shadow'),
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
+                pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-active'),
+            }]
+        }
+
+        let config = {
+            type: 'radar',
+            data: data,
+            options: {
+                maintainAspectRatio : false,
+                scales: {
+                    r: {
+                        beginAtZero : true,
+
+                    }
+                },
+                elements: {
+                    line: {
+                    borderWidth: 3
+                    }
+                },
+            },
+          };
+
+    if (radar) {
+        let config = {
+            type: 'radar',
+            data: data,
+            options: {
+                maintainAspectRatio : false,
+                scales: {
+                    r: {
+                        beginAtZero : true,
+                    }
+                },
+                elements: {
+                    line: {
+                    borderWidth: 3
+                    }
+                },
+            },
+          };
+        }
+
+        // if (chart.canvas) {
+        //     let chart = new Chart(canvas, config)
+        // } else {
+        //     chart.update(canvas, config)
+        // }
+        if (typeof(chart) == 'undefined') {
+            chart = new Chart(canvas, config)
+        } else {
+            chart.destroy()
+            chart = new Chart(canvas, config)
+        }
+}
+
 function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=false) {
     let subjects = []
     let Identifiers = []
     let tags = []
     let values = []
+    let GraphDict = {}
 
     if (ByIdentifiers || ByTags) {BySubject=false}
 
     // --------------------------------------------- Subjects ------------------------------------------
     if (BySubject) {
-        let GraphDict = {}
         let SubjectCount = {}
         for (let i of grades) {
             // console.log(i['Subject'])
@@ -359,50 +429,22 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
         }
         console.log('Values' , values)
 
-        let labels = subjects
-        let data = {
-            labels: labels,
-            datasets: [{
-                label: 'Term1',
-                data: values,
-                fill: true,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgb(255, 99, 132)',
-                pointBackgroundColor: 'rgb(255, 99, 132)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgb(255, 99, 132)'
-            }]
-        }
-
-        let config = {
-            type: 'radar',
-            data: data,
-            options: {
-                maintainAspectRatio : false;
-                scales: {
-                    r: {
-                        beginAtZero : true,
-
-                    }
-                },
-                elements: {
-                    line: {
-                    borderWidth: 3
-                    }
-                },
-            },
-          };
-
-        let chart = new Chart(GraphDisplay, config)
-
+        DrawGraph(GraphDisplay,true,subjects,values)
     // --------------------------------------------- Identifiers------------------------------------------
     } else if (ByIdentifiers) {
+        let IdentifierCount = {}
         for (i of grades) {
             let Gradeidentifiers = i['Identifiers'].split(' ')
+            i['Grade'] = fractionConvert(String(i['Grade']))
             for (x of Gradeidentifiers) {
-                if (!Identifiers.includes(x)) {Identifiers.push(x)}
-            } 
+                if (!Identifiers.includes(x)) {
+                    Identifiers.push(x);
+                    IdentifierCount[x][0] += 1
+                    IdentifierCount[x][1] += i['Grade']
+                }
+            }
+            console.log(IdentifierCount)
+            
         }
     } else if (ByIdentifiers) {
         for (i of grades) {
@@ -419,6 +461,10 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
 
 GraphDisplayBtn.addEventListener('click', (event) => {
     eel.get_grades()((result) => GenerateGradesGraph(result))
+})
+
+SortinBtn.addEventListener('click', (event) => {
+    reload(true,true)
 })
 
 grade_submit.addEventListener("click", (event) => {
@@ -472,7 +518,9 @@ DataFileInpt.addEventListener('click' , (event) => {
     reload()
 })
 
+// ---------------------------- Data Setup ----------------------------
 eel.get_identifiers()(Display_identifiers)
 eel.get_settings()(Apply_settings)
 eel.read_subjects()(Display_subjects)
 eel.get_grades()(display_all_grades)
+eel.get_grades()((result) => GenerateGradesGraph(result))

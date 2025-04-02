@@ -263,14 +263,14 @@ def save_grade(subject,grade,identifiers='',tags=''):
     write_data(content)
     Grade_count += 1
 
-@eel.expose 
+@eel.expose
 def get_grades(sorted=False,accending=False):
     content = read_data()['Grades']
     print(sorted)
     if sorted:
         quickDictSoct(content,'Grade',True)
         printDict(content)
-        if not accending:
+        if accending:
             content.reverse()
     return content
 

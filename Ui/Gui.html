@@ -22,6 +22,7 @@
             <div style="display: flex; gap: 5px; text-align: center; justify-content: center; align-content: center;">
                 <button class="button primary" popovertarget="Popover">+</button>
                 <button class="button secondary" popovertarget="Average-popover">Average</button>
+                <button class="button secondary" id="Sort-button">Sort</button>
                 <button class="button secondary refresh icon" id="Reload-button"></button>
             </div>
         </div>
@@ -31,8 +32,12 @@
             <button popovertarget="Average-popover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
             <li id="Average-label">Avarage : </li> <br>
             <li class="A" id="Average-rating">.</li> <br>
-            <img src="" alt="" id="Grade-Chart-display">
-            <canvas class="Chart radar main" id="Graph-display" width="10" height="10"></canvas>
+            <!-- <img src="" alt="" id="Grade-Chart-display"> -->
+
+            <div style="width: 200px;height: 200px;">
+                <canvas class="Chart radar main" id="Graph-display" width="100" height="100"></canvas>
+            </div>
+
             <input list="Subjects" class="switch main fill" id="Average-subject" placeholder="Enter a subject (All for all)"> <br>
             <div style="display: flex;flex-direction: row; gap: 10px;">
                 <input list="Types" class="switch main fill" id="Average-Identifiers" placeholder="Enter Identifiers (All for all)">
