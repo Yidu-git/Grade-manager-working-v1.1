@@ -22,6 +22,7 @@
             <div style="display: flex; gap: 5px; text-align: center; justify-content: center; align-content: center;">
                 <button class="button primary" popovertarget="Popover">+</button>
                 <button class="button secondary" popovertarget="Average-popover">Average</button>
+                <button class="button secondary charticon" popovertarget="StatisticsPopover">Statistics</button>
                 <button class="button secondary" id="Sort-button">Sort</button>
                 <button class="button secondary refresh icon" id="Reload-button"></button>
             </div>
@@ -32,11 +33,6 @@
             <button popovertarget="Average-popover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
             <li id="Average-label">Avarage : </li> <br>
             <li class="A" id="Average-rating">.</li> <br>
-            <!-- <img src="" alt="" id="Grade-Chart-display"> -->
-
-            <div style="width: 200px;height: 200px;">
-                <canvas class="Chart radar main" id="Graph-display" width="100" height="100"></canvas>
-            </div>
 
             <input list="Subjects" class="switch main fill" id="Average-subject" placeholder="Enter a subject (All for all)"> <br>
             <div style="display: flex;flex-direction: row; gap: 10px;">
@@ -47,13 +43,70 @@
             <br>
             <input list="Types" class="switch main fill" id="Average-Tags" placeholder="Enter Tags (All for all) **Work in progress**"> <br>
             <button class="button primary" id="Calculate-average-button" >Calculate</button>
-            <button class="button primary" id="Generate-graph-button">Generate graph</button>
         </div>
+
+        <!-- Statistics popover -->
+         <div id="StatisticsPopover" class="popover" popover>
+            <li class="PopHeader">Statistics</li>
+            <button popovertarget="StatisticsPopover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
+            
+            <div style="width: 200px;height: 200px;">
+                <canvas class="Chart radar main" id="Graph-display" width="100" height="100"></canvas>
+            </div>
+
+            <li style="text-align: left;">Generate Using : </li>
+            <div class="radiocontainer">
+                <div class="radio Labeled">
+                    <label class="radio">
+                        <input type="radio" name="GraphFilter" checked="">
+                        <span class="radioLabel">Subject</span>
+                    </label>
+                
+                    <label class="radio">
+                        <input type="radio" name="GraphFilter">
+                        <span class="radioLabel">Identifier</span>
+                    </label>
+                    
+                    <label class="radio">
+                        <input type="radio" name="GraphFilter">
+                        <span class="radioLabel">Tag</span>
+                    </label>
+                </div>
+            </div>
+            <br>
+
+            <li style="text-align: left;">Graph type</li>
+            <div class="radiocontainer">
+                <div class="radio Labeled">
+                        <label class="radio">
+                        <input type="radio" name="GraphType" checked="">
+                    <span class="radioLabel">Radar</span>
+                    </label>
+                
+                    <label class="radio">
+                        <input type="radio" name="GraphType">
+                        <span class="radioLabel">Bargraph</span>
+                    </label>
+                    
+                    <label class="radio">
+                        <input type="radio" name="GraphType">
+                        <span class="radioLabel">Piechart</span>
+                    </label>
+                </div>
+            </div>
+            <br>
+            <li style="text-align: left;">Filters : </li>
+            <div style="display: flex;justify-content: space-between;">
+                <input type="text" class="Input fill" id="IdentifierFilter input" placeholder="Input Identifiers">
+                <input type="text" class="Input fill" id="IdentifierFilter input" placeholder="Input Identifiers">
+            </div>
+            <button class="button primary" id="Generate-graph-button">Generate graph</button>
+         </div>
 
         <!-- Settings popover -->
         <div class="popover settings" id="Settings-popover" popover>
             <button popovertarget="Settings-popover" popovertargetaction="hide" class="xicon" id="exit-settings"><span>❌</span></button>
-            <li>Settings</li> 
+            <li>Settings</li>
             <br style="font-size: smaller;"> <hr> <br>
             <label class="switch">
                 <li>Theme</li>
@@ -88,10 +141,6 @@
             </div>
             <br>
             <li style="text-align: left;font-weight: 300;">Files</li>
-            <!-- <input class="File-Choice" type="file" name="DataFile" id="DataFile" accept=".json">
-            <label for="DataFile" class="button primary">
-                <span>Open File</span>
-            </label> -->
             <input type="text" class="Input primary" id="DataFileInput" placeholder="Input direct filepath">
             <button class="button primary" id="DataFile">Submit File</button>
         </div> 
@@ -110,8 +159,8 @@
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
                 <input type="text" class="Input" placeholder="Enter a score" id="Score-input">
                 <input class="Input" list="Subjects" name="Subjects" id="Subject-input" placeholder="Pick a subject">
-                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="(Identifiers) type term year">
-                <input class="Input" list="Types" name="Types" id="Grade-tags-input" placeholder="(tags) important">
+                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="[Identifiers] type term year (+ or ExtraMark for Extra Mark)">
+                <input class="Input" list="Types" name="Types" id="Grade-tags-input" placeholder="[tags] important">
                 <button class="button primary" id="Submit-button" popovertarget="Popover" popovertargetaction="hide">Submit</button>
                 <button class="button primary" id="Subject-add-button" >Add subject</button>
             </div>
@@ -129,7 +178,7 @@
             <!-- Tags get added here -->
         </datalist>
 
-        <div class="outer">
+        <div class="outer NoScroll">
             <table class="Table Main">
                 <thead class="Table head">
                     <th class="Table head">Subject</th>  
@@ -144,6 +193,7 @@
                         <td>waf</td>
                         <td>awf</td>
                     </tr> -->
+                    
                 </tbody>
             </table>
         </div>

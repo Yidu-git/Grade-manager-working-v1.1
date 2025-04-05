@@ -12,7 +12,8 @@ dirname  = os.path.dirname(__file__ + 'Gui')
 # eel.init(f'{os.path.dirname(os.path.realpath(__file__))}/web')
 
 if __name__ == '__main__' :
-    eel.init('Ui', allowed_extensions=['.html','.css','.js','.json'], js_result_timeout=1000)
+    eel.init('Ui', allowed_extensions=['.html','.css','.js','.json','.svg','.png','.jpeg'], js_result_timeout=1000)
+    # eel.init('Ui', js_result_timeout=1000)
 Grade_count = 0
 
 @eel.expose
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     print(default_data_file_dir)
     if not os.path.exists(default_data_file_dir):
         with open(default_data_file_dir,'x') as file:
-            file.write(json.dumps({'Grades':[],'Subjects':[],'Identifiers': [],'Version':CurrentVersion}))
+            file.write(json.dumps({'Grades':[],'Subjects':[],'Identifiers': [],'Version':CurrentVersion,'ExtraMarks':[]}))
 
     else:
         content  = read_data()
@@ -68,18 +69,20 @@ if __name__ == '__main__':
         with open(user_data_file_dir,'x') as file:
             file.write(json.dumps({'User-settings':{'Theme':'Systemm','Color-scheme':"purple",'Current-File' : 'data.json'}}))
 
+@eel.expose
 def clean_up_grades():
     content = read_data()
     for grade in content['Grades']:
         if not '/' in grade['Grade']:
-            grade['Grade'] = str(int(grade['Grade']))
+            grade['Grade'] = str(float(grade['Grade']))
         if grade['Subject'] not in content['Subjects']:
             content['Subjects'].append(grade['Subject'])
+    for sub in content['Subjects'] :
+        print(sub)
+        if sub not in list(content['ExtraMarks'].keys()):
+            content['ExtraMarks'].update({sub : 0})
+            print(sub)
     write_data(content)
-
-if __name__ == '__main__':
-    applySettings()
-    clean_up_grades()
 
 @eel.expose
 def check_gradecount():
@@ -244,35 +247,60 @@ def get_identifier_average(identifiers,Absolute=True):
             return average
         else : return 'identifier does not exist'
 
+def addPlus(mark,subject):
+    content = read_data(default_data_file_dir)
+    if subject in content['ExtraMarks']: 
+        if type(content['ExtraMarks'][subject]) == str:
+            content['ExtraMarks'][subject] = fraction_convert(content['ExtraMarks'][subject])
+        content['ExtraMarks'][subject] += mark
+        write_data(content,default_data_file_dir)
+    else :
+        print('Subject does not exist')
+
 #saves a grade based on given data
 @eel.expose
 def save_grade(subject,grade,identifiers='',tags=''):
     global Grade_count
 
-    new_grade = {
-        'id': Grade_count +1,
-        'Subject' : subject,
-        'Grade' : grade,
-        'Identifiers' : identifiers,
-        'Tags' : tags,
-    }
+    if '+' or 'ExtraMark' in identifiers:
+        addPlus(fraction_convert(str(grade)),subject)
 
-    content = read_data()
-    content['Grades'].append(new_grade)
+    else:
+        new_grade = {
+            'id': Grade_count +1,
+            'Subject' : subject,
+            'Grade' : grade,
+            'Identifiers' : identifiers,
+            'Tags' : tags,
+        }
 
-    write_data(content)
-    Grade_count += 1
+        content = read_data()
+        content['Grades'].append(new_grade)
+
+        write_data(content)
+        Grade_count += 1
 
 @eel.expose
-def get_grades(sorted=False,accending=False):
-    content = read_data()['Grades']
-    print(sorted)
-    if sorted:
-        quickDictSoct(content,'Grade',True)
-        printDict(content)
-        if accending:
-            content.reverse()
-    return content
+def get_grades(sorted=False,accending=False,ExtraMarks=False):
+    if ExtraMarks:
+        content = read_data()
+        Grades = content['Grades']
+        Marks = content['ExtraMarks']
+        if sorted:
+            quickDictSoct(Grades,'Grade',True)
+            printDict(Grades)
+            if accending:
+                Grades.reverse()
+        return [Grades,Marks]
+    else:
+        content = read_data()['Grades']
+        print(sorted)
+        if sorted:
+            quickDictSoct(content,'Grade',True)
+            printDict(content)
+            if accending:
+                content.reverse()
+        return content
 
 def is_fraction(string:str):
     if '/' in string : return True
@@ -280,9 +308,11 @@ def is_fraction(string:str):
 
 @eel.expose
 def fraction_convert(value:str):
-    v,t = value.split('/')
-    newValue = (float(v)/float(t))*100
-    return round(newValue,2)
+    if '/' in value:
+        v,t = value.split('/')
+        newValue = (float(v)/float(t))*100
+        return round(newValue,2)
+    else: return float(value)
 
 def calculate_average(grades:list):
     total = 0
@@ -455,4 +485,7 @@ def printDict(dict):
         print(i['id'],'|',i['Subject'],'|',i['Identifiers'],'|','\033[93m',i['Grade'],'| \033[0m')
 
 if __name__ == '__main__' :
-    eel.start("Gui.html",size=(500,600))
+    applySettings()
+    print('hi')
+    clean_up_grades()
+    eel.start("Gui.html",size=(900,600))

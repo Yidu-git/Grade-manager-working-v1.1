@@ -12,6 +12,7 @@
     color-scheme: light;
     --bg: #edeadf;
     --text-main: #1f1e1e;
+    --text-secondary: #323232;
     --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
     --brightness: 0%;
 }
@@ -22,6 +23,7 @@
     --text-main: rgb(237, 234, 229);
     --box-shadow: 0px 5px 15px -0px color-mix(in oklab,var(--primary-shadow)50%,rgba(0, 0, 0, 0.734));
     --brightness: 150%;
+    --text-secondary: #c5c5c5;
 }
 
 :root:has(#theme [value='System']:checked) {
@@ -34,15 +36,17 @@
         --text-main: rgb(237, 234, 229);
         --box-shadow: 0px 5px 15px -0px color-mix(in oklab,var(--primary-shadow)50%,rgba(0, 0, 0, 0.734));
         --brightness: 150%;
+        --text-secondary: #c5c5c5;
     }
 }
 
 @media (prefers-color-scheme: light) {
     :root {
-    --bg: #edeadf;
-    --text-main: #1f1e1e;
-    --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
-    --brightness: 0%;    
+        --bg: #edeadf;
+        --text-main: #1f1e1e;
+        --box-shadow: 0px 8px 30px -5px color-mix(in oklab,var(--primary-shadow)90%,rgb(69, 69, 70));
+        --brightness: 0%;
+        --text-secondary: #323232;
     }
 }
 
@@ -56,6 +60,7 @@
     --secondary-hover: #a050d5 ;
     --secondary-active: #e090ff ;
     --secondary-shadow: #3b008976;
+    --text-button: white;
 }
 
 :root:has(#Color-scheme [value='Red']:checked) {
@@ -67,6 +72,7 @@
     --secondary-hover: #d550c3 ;
     --secondary-active: #ff90f2 ;
     --secondary-shadow: #84008976;
+    --text-button: white;
 }
 
 :root:has(#Color-scheme [value='Blue']:checked) {
@@ -78,6 +84,7 @@
     --secondary-hover: #5076d5 ;
     --secondary-active: #90b9ff ;
     --secondary-shadow: #00328976;
+    --text-button: white;
 }
 
 :root:has(#Color-scheme [value='Green']:checked) {
@@ -89,6 +96,7 @@
     --secondary-hover: #50d3d5 ;
     --secondary-active: #90fff0 ;
     --secondary-shadow: #00728976;
+    --text-button: white;
 }
 
 :root:has(#Color-scheme [value='Mint']:checked) {
@@ -96,10 +104,11 @@
     --primary-hover: #50d5c1 ;
     --primary-active: #90ffd3 ;
     --primary-shadow: #50d1c242;
-    --secondary : #ff50d6 ;
+    --secondary : #ff75df ;
     --secondary-hover: #d550c3 ;
     --secondary-active: #ff90f2 ;
     --secondary-shadow: #00728976;
+    --text-button: white;
 }
 
 :root:has(#Color-scheme [value='Orange']:checked) {
@@ -111,6 +120,7 @@
     --secondary-hover: #d59950 ;
     --secondary-active: #ffc890 ;
     --secondary-shadow: #89400076;
+    --text-button: white;
 }
 
 :root:has(#Color-scheme [value='Magenta']:checked) {
@@ -122,6 +132,7 @@
     --secondary-hover: #d550c3 ;
     --secondary-active: #ff90f2 ;
     --secondary-shadow: #00728976;
+    --text-button: white;
 }
 
 html {
@@ -224,6 +235,46 @@ body {
     padding: 5px 10px;
 }
 
+.radiocontainer {
+    justify-items: center;
+    height: fit-content;
+}
+
+.radio span{
+    height: 100px;
+    width: fit-content;
+}
+
+.radio.Labeled {
+    background-color: color-mix(in oklab, var(--bg) 90%, var(--text-main));
+    padding: 0.1rem;
+    text-align: center;
+    gap: 0;
+    width: fit-content;
+    height: fit-content;
+    /* height: 10px; */
+    border-radius: var(--CornerRadius-3);
+}
+
+.radio.Labeled input{
+    display: none;
+}
+
+.radio.Labeled .radioLabel{
+    padding: 2px 10px;
+    font-size: 18px;
+    font-weight: 400;
+    background-color: color-mix(in oklab, var(--bg) 90%, var(--text-main));
+    border-radius: var(--CornerRadius-button);
+    font-weight: 300;
+}
+
+.radio.Labeled .radio input:checked + .radioLabel {
+    background-color: var(--primary);
+    color: var(--text-button);
+    height: 100%;
+}
+
 .header span{
     font-weight: 600;
     color: var(--primary);
@@ -259,7 +310,7 @@ body {
 }
 
 .outer {
-    height: 300px;
+    height: calc(100vh - 200px);
     width: 100%;
     overflow-x: visible;
     overflow-y: scroll;
@@ -280,20 +331,27 @@ th {
     height: fit-content;
 }
 
-::-webkit-scrollbar {
+.Table.body tr,td {
+    height: fit-content;
+}
+
+tr,tr td{
+    height: fit-content;
+    /* background-color: #03b5d0; */
+}
+
+.NoScroll::-webkit-scrollbar {
     appearance: none;
     display: none;
 }
 
 .Table {
     width: 100%;
-    height: 100%;
     table-layout: fixed;
 }
 
 .Table.main{
     table-layout: fixed;
-    border: 10px #1e1e1e;
 }
 
 .Table.head {
@@ -313,7 +371,7 @@ th {
 .button {
     cursor: pointer;
     padding: 5px 20px;
-    color: white;
+    color: var(--text-button);
     font-size: 16px;
     font-weight: 500;
     border: none;
@@ -405,7 +463,7 @@ button.xicon {
 }
 
 button.xicon span {
-    filter: invert(100%) brightness(var(--brightness));
+    filter: invert(100%) brightness(var(--brightness))
 }
 
 button.icon {

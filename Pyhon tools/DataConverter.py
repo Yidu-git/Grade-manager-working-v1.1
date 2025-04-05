@@ -13,7 +13,7 @@ def convert(dataLocation:str,DataVersion:float='',ConvertVersion:float=CurrentVe
         if ConvertVersion == CurrentVersion:
             if DataVersion < ConvertVersion :
                 KeepUserData = input('Would you like to convert settings in a new file? (Y/N) >> ')
-                if KeepUserData == 'y' or 'Y' or '' :
+                if KeepUserData == 'y' or 'Y' :
                     try:
                         UserData = {"User-Settings" :Data['User-settings']}
                     except:
@@ -22,15 +22,25 @@ def convert(dataLocation:str,DataVersion:float='',ConvertVersion:float=CurrentVe
                     with open(f'{dataLocation.replace('.json','')}UserData.Json','w') as f:
                         f.write(json.dumps(UserData))
                     # if not NoUserSettings:
-                    Data.pop('User-settings')
-                else :
-                    Data.pop('User-settings')
-                    print('User Settings Deleted')
+                    try:
+                        Data.pop('User-settings')
+                    except: pass
+                elif KeepUserData == 'N' or 'n' or '' :
+                    try:
+                        Data.pop('User-settings')
+                        print('User Settings Deleted')
+                    except : pass
                 
                 print(Data)
                 try:
                     Data.update({'Identifiers' : Data['Types']})
                     Data.pop('Types')
+                except: pass
+
+                try:
+                    Data.update({'ExtraMarks' : {}})
+                    for i in Data['Subjects']:
+                        Data['ExtraMarks'].update({i:0})
                 except: pass
 
                 #Updating grades
@@ -44,7 +54,9 @@ def convert(dataLocation:str,DataVersion:float='',ConvertVersion:float=CurrentVe
                         try:
                             grade.update({'Comments' : ''})
                         except: pass
-                
+
+                Data['Version'] = DataVersion
+
                 print(Data)
                 write_data(Data,dataLocation)
 
