@@ -58,6 +58,15 @@ const DataFileInpt = document.getElementById('DataFile')
 
 let chart = undefined
 
+function RandomColor(rgba=false,opacity=1) {
+    if(rgba) {
+        return 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256)  + ',' + opacity + ')'
+    }
+    if(!rgba) {
+        return "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
+    }
+}
+
 function Apply_settings(settings) {
     if (settings != {}) {
         Theme.value = settings['Theme']
@@ -315,11 +324,44 @@ function reload(sort=false,acending=false) {
     eel.get_grades(sort,acending)(display_all_grades)
 }
 
-function DrawGraph(canvas,radar=false,Labels,values) {
-        let data = {
+function DrawGraph(canvas,type='radar',Labels,Inputdata,multipleVlaues,DataLabels=[]) {
+    if (type === 'radar') {radar = true}
+    if (type === 'bar') {bar = true}
+    if (multipleVlaues) {
+        let datasets = []
+
+        for (i of DataLabels) {
+            let color = RandomColor()
+            datasets.push(
+                {
+                    label: i,
+                    data: Inputdata[i],
+                    fill: true,
+                    backgroundColor: RandomColor(true,0.1),
+                    borderColor: color,
+                    pointBackgroundColor: color,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-active'),
+                }
+            )
+        }
+
+        console.log(datasets)
+        // console.log('DS',datasets)
+
+        data = { 
+            labels : Labels,
+            datasets : datasets,
+        }
+    }
+
+    if (!multipleVlaues) {
+        values = Inputdata
+        data = {
             labels: Labels,
             datasets: [{
-                label: 'Term1',
+                label: '',
                 data: values,
                 fill: true,
                 backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-shadow'),
@@ -328,62 +370,42 @@ function DrawGraph(canvas,radar=false,Labels,values) {
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-active'),
-            }]
-        }
+        },]
+    }}
 
-        let config = {
-            type: 'radar',
-            data: data,
-            options: {
-                maintainAspectRatio : false,
-                scales: {
-                    r: {
-                        beginAtZero : true,
+    let config = {
+        type: type,
+        data: data,
+        options: {
+            maintainAspectRatio : false,
+            scales: {
+                r: {
+                    beginAtZero : true,
 
-                    }
-                },
-                elements: {
-                    line: {
-                    borderWidth: 3
-                    }
-                },
+                }
             },
-          };
-
-    if (radar) {
-        let config = {
-            type: 'radar',
-            data: data,
-            options: {
-                maintainAspectRatio : false,
-                scales: {
-                    r: {
-                        beginAtZero : true,
-                    }
-                },
-                elements: {
-                    line: {
-                    borderWidth: 3
-                    }
-                },
+            elements: {
+                line: {
+                borderWidth: 3
+                }
             },
-          };
-        }
+        },
+        };
 
-        // if (chart.canvas) {
-        //     let chart = new Chart(canvas, config)
-        // } else {
-        //     chart.update(canvas, config)
-        // }
-        if (typeof(chart) == 'undefined') {
-            chart = new Chart(canvas, config)
-        } else {
-            chart.destroy()
-            chart = new Chart(canvas, config)
-        }
+    // if (chart.canvas) {
+    //     let chart = new Chart(canvas, config)
+    // } else {
+    //     chart.update(canvas, config)
+    // }
+    if (typeof(chart) == 'undefined') {
+        chart = new Chart(canvas, config)
+    } else {
+        chart.destroy()
+        chart = new Chart(canvas, config)
+    }
 }
 
-function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=false) {
+function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags=false,ExtraMarks=false,SplitSubjectsByIdentifiers=true,Splitindex=0) {
     let subjects = []
     let Identifiers = []
     let tags = []
@@ -392,8 +414,22 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
 
     if (ByIdentifiers || ByTags) {BySubject=false}
 
+    console.log(ExtraMarks)
+
+    let grades = Data
+    let Marks = {}
+
+    if (ExtraMarks === true) {
+        grades = Data[0]
+        console.log(Data , 'S')
+        Marks = Data[1]
+    } else {
+    }
+    console.log(ExtraMarks , 'x')
+    console.log(Data , 'S')
+
     // --------------------------------------------- Subjects ------------------------------------------
-    if (BySubject) {
+    if (BySubject && !SplitSubjectsByIdentifiers) {
         let SubjectCount = {}
         for (let i of grades) {
             // console.log(i['Subject'])
@@ -403,7 +439,7 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
             }
         }
 
-        for (let i of grades) {
+        for (i of grades) {
             // console.log(i['Grade'])
             i['Grade'] = fractionConvert(String(i['Grade']))
             // console.log(i['Grade'])
@@ -411,7 +447,7 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
             SubjectCount[i['Subject']][0] += 1
             SubjectCount[i['Subject']][1] += i['Grade']
             // console.log()
-            console.log('sub[1]  ',i['Subject'] ,SubjectCount[i['Subject']][1])
+            // console.log('sub[1]  ',i['Subject'] ,SubjectCount[i['Subject']][1])
         }
 
         console.log(SubjectCount)
@@ -422,31 +458,138 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
         }
         // console.log(SubjectCount)
         // console.log(GraphDict)
-        
-        for (i in GraphDict) {
-            // console.log(i)
-            values.push(GraphDict[i])
-        }
-        console.log('Values' , values)
 
-        DrawGraph(GraphDisplay,true,subjects,values)
-    // --------------------------------------------- Identifiers------------------------------------------
+        console.log(Marks)
+        if (ExtraMarks) {
+            for (i in GraphDict) {
+                if (Object.keys(Marks).includes(i)) {
+                    console.log('c --------------' ,GraphDict[i] , ',' , Marks[i])
+                    GraphDict[i] = parseFloat(GraphDict[i]) + Marks[i]
+                }
+                values.push(GraphDict[i])
+            }
+        } else {
+            for (i in GraphDict) {
+                values.push(GraphDict[i])
+            }
+        }
+        console.log('Values : -----------' , values)
+        // console.log('Values : -----------' , subjects)
+
+        DrawGraph(GraphDisplay,type,subjects,values,false)
+    }
+
+    // ---------------------- Split ----------------------
+
+    if (BySubject && SplitSubjectsByIdentifiers) {
+        let identifiers = []
+        GradesIdentifiers = {}
+        GraphDict = {}
+        let Subjects = []
+        for (let i of grades) {
+            let GradeIdentifier = i['Identifiers'].split(' ')[Splitindex]
+            // console.log('GID',GradeIdentifier)
+            i['Grade'] = fractionConvert(String(i['Grade']))
+            if (!Subjects.includes(i['Subject'])) {
+                Subjects.push(i['Subject']);
+                // console.log(GradeIdentifier)
+            }
+            if (!identifiers.includes(GradeIdentifier)) {
+                identifiers.push(GradeIdentifier);
+                // console.log(GradeIdentifier)
+            }
+        }
+
+        console.log('IDs',identifiers)
+        // console.log('GIDs1',GradesIdentifiers)
+
+        // for (i of)
+        for (i in identifiers) {
+            GradesIdentifiers[identifiers[i]] = {}
+            console.log('I',identifiers[i])
+        }
+
+        for (i of grades) {
+            let Grade = i['Grade']
+            // console.log(Grade)
+            for (j in GradesIdentifiers) {
+                if (!Object.keys(GradesIdentifiers[j]).includes(i['Subject'])) {
+                    GradesIdentifiers[j][i['Subject']] = [0,0]
+                }
+            }
+        }
+
+        for (i of grades) {
+            let Grade = i['Grade']
+            let Subject = i['Subject']
+            // console.log(Grade)
+            for (j in GradesIdentifiers) {
+                // console.log('j       ',j)
+                for (x in Subjects) {
+                    // console.log('x       ',x)
+                    if (i['Identifiers'].split(' ')[0] === j) {
+                        GradesIdentifiers[j][i['Subject']][0] += 1
+                        GradesIdentifiers[j][i['Subject']][1] += Grade
+                        // console.log('x       ',GradesIdentifiers[j][i['Subject']][1])
+                        // console.log(Object.keys(GradesIdentifiers[j]))
+                    }
+                }
+            }
+        }
+        
+
+        console.log('GIDs2',GradesIdentifiers)
+
+        for (x in GradesIdentifiers) {
+            GraphDict[x] = []
+            // console.log('x -------',x)
+            for (i in GradesIdentifiers[x]) {
+                console.log('i ------' , GradesIdentifiers[x][i] , x)
+                GraphDict[x].push(Math.round(GradesIdentifiers[x][i][1] / GradesIdentifiers[x][i][0] * 100) /100)
+            }
+        }
+
+        console.log('GraphDict',GraphDict)
+        console.log('Subjects',Subjects)
+        console.log('identifiers',identifiers)
+
+        DrawGraph(GraphDisplay,type,Subjects,GraphDict,true,identifiers)
+
+
+    // --------------------------------------------- Identifiers ------------------------------------------
     } else if (ByIdentifiers) {
         let IdentifierCount = {}
         for (i of grades) {
-            let Gradeidentifiers = i['Identifiers'].split(' ')
+            let Gradesdentifiers = i['Identifiers'].split(' ')
             i['Grade'] = fractionConvert(String(i['Grade']))
-            for (x of Gradeidentifiers) {
+            for (x of GradeIdentifiers) {
                 if (!Identifiers.includes(x)) {
                     Identifiers.push(x);
-                    IdentifierCount[x][0] += 1
+                    // console.log(Gradesdentifiers)
+                    IdentifierCount[x] = [1,i['Grade']]
+                    // console.log(IdentifierCount[x])
+                } else {
+                    IdentifierCount[x][0] ++
                     IdentifierCount[x][1] += i['Grade']
                 }
             }
-            console.log(IdentifierCount)
-            
         }
-    } else if (ByIdentifiers) {
+
+        for (i in IdentifierCount) {
+            GraphDict[i] =  Math.round(IdentifierCount[i][1] / IdentifierCount[i][0] * 100) / 100
+            console.log[i]
+            // console.log('CL ------------ ',IdentifierCount[i])
+        }
+
+        for (i in GraphDict) {
+            values.push(GraphDict[i])
+        }
+
+        console.log('V ------------ ',GraphDict)
+
+        DrawGraph(GraphDisplay,true,Identifiers,values,false)
+
+    } else if (ByTags) {
         for (i of grades) {
             let Gradetags = i['Tags'].split(' ')
             for (x of Gradetags) {
@@ -460,7 +603,25 @@ function GenerateGradesGraph(grades,BySubject=true,ByIdentifiers=false,ByTags=fa
 // alert(eel.return_test()(result => { return() => result}))
 
 GraphDisplayBtn.addEventListener('click', (event) => {
-    eel.get_grades()((result) => GenerateGradesGraph(result))
+    if (document.getElementsByName('GraphType')[0].checked) {
+        eel.get_grades(false,false,true)((result) => {
+            GenerateGradesGraph(result, 'radar' ,
+                document.getElementsByName('GraphFilter')[0].checked,
+                document.getElementsByName('GraphFilter')[1].checked,
+                document.getElementsByName('GraphFilter')[2].checked,
+                false,
+                document.getElementsByName('GraphFilter')[3].checked,
+                0)
+            })
+    } if (document.getElementsByName('GraphType')[1].checked) {
+        eel.get_grades(false,false,true)((result) => {
+            GenerateGradesGraph(result, 'bar',
+                document.getElementsByName('GraphFilter')[0].checked,
+                document.getElementsByName('GraphFilter')[1].checked,
+                document.getElementsByName('GraphFilter')[2].checked,
+                true,true,0)
+            })
+    }
 })
 
 SortinBtn.addEventListener('click', (event) => {
@@ -523,4 +684,4 @@ eel.get_identifiers()(Display_identifiers)
 eel.get_settings()(Apply_settings)
 eel.read_subjects()(Display_subjects)
 eel.get_grades()(display_all_grades)
-eel.get_grades()((result) => GenerateGradesGraph(result))
+eel.get_grades()((result) => {GenerateGradesGraph(result)})

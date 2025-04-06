@@ -36,7 +36,7 @@ def read_data(dataLocation=''):
 def openFile(path):
     global default_data_file_dir
     print(path)
-    print(read_data())
+    # print(read_data())
     content = read_data(user_data_file_dir)
     content['User-settings']['Current-File'] = path
     write_data(content,user_data_file_dir)
@@ -78,10 +78,10 @@ def clean_up_grades():
         if grade['Subject'] not in content['Subjects']:
             content['Subjects'].append(grade['Subject'])
     for sub in content['Subjects'] :
-        print(sub)
+        # print(sub)
         if sub not in list(content['ExtraMarks'].keys()):
             content['ExtraMarks'].update({sub : 0})
-            print(sub)
+            # print(sub)
     write_data(content)
 
 @eel.expose
@@ -106,10 +106,10 @@ def get_average(subject,identifier,absolute=False):
 
     elif subject == '':
         average = get_identifier_average(identifier,absolute)
-        print(identifier)
+        # print(identifier)
     elif identifier == '':
-        average = get_subject_average(subject)
-        print(subject)
+        average = get_subject_average(subject) + content['ExtraMarks'][subject]
+        # print(subject)
     
     else:
         for grade in content['Grades']:
@@ -203,8 +203,8 @@ def identifier_exists(type):
 def get_identifier_average(identifiers,Absolute=True):
     if ' ' in identifiers:
         Identifiers = identifiers.split(' ')
-        print(identifiers)
-        print(Identifiers)
+        # print(identifiers)
+        # print(Identifiers)
         exists = False
         existsCount = 0
         for i in identifiers.split(' '):
@@ -226,7 +226,7 @@ def get_identifier_average(identifiers,Absolute=True):
                         if i in identifiers: ExistCount += 1
                         if ExistCount == len(identifiers): Exists = True
                     else:
-                        if i in identifiers: Exists = True
+                        if i in Identifiers: Exists = True
                 if Exists:
                     grades.append(grade['Grade'])
             average = calculate_average(grades)
@@ -282,6 +282,7 @@ def save_grade(subject,grade,identifiers='',tags=''):
 
 @eel.expose
 def get_grades(sorted=False,accending=False,ExtraMarks=False):
+    print('\033[93mExM : ' , ExtraMarks, '\033[0m')
     if ExtraMarks:
         content = read_data()
         Grades = content['Grades']
@@ -292,7 +293,7 @@ def get_grades(sorted=False,accending=False,ExtraMarks=False):
             if accending:
                 Grades.reverse()
         return [Grades,Marks]
-    else:
+    if not ExtraMarks:
         content = read_data()['Grades']
         print(sorted)
         if sorted:
@@ -366,7 +367,7 @@ def delete_grade(id):
 
     check_gradecount()
 
-    print(id)
+    print(f'Removing grade, id : {id}')
 
     content = read_data()
     for grade in content['Grades']:
@@ -486,6 +487,5 @@ def printDict(dict):
 
 if __name__ == '__main__' :
     applySettings()
-    print('hi')
     clean_up_grades()
     eel.start("Gui.html",size=(900,600))

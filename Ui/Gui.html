@@ -47,61 +47,74 @@
 
         <!-- Statistics popover -->
          <div id="StatisticsPopover" class="popover" popover>
-            <li class="PopHeader">Statistics</li>
             <button popovertarget="StatisticsPopover" popovertargetaction="hide" class="xicon"><span>❌</span></button>
-            
-            <div style="width: 200px;height: 200px;">
-                <canvas class="Chart radar main" id="Graph-display" width="100" height="100"></canvas>
-            </div>
-
-            <li style="text-align: left;">Generate Using : </li>
-            <div class="radiocontainer">
-                <div class="radio Labeled">
-                    <label class="radio">
-                        <input type="radio" name="GraphFilter" checked="">
-                        <span class="radioLabel">Subject</span>
-                    </label>
-                
-                    <label class="radio">
-                        <input type="radio" name="GraphFilter">
-                        <span class="radioLabel">Identifier</span>
-                    </label>
-                    
-                    <label class="radio">
-                        <input type="radio" name="GraphFilter">
-                        <span class="radioLabel">Tag</span>
-                    </label>
+            <li class="PopHeader">Statistics</li>
+            <div style="display :flex;flex-direction: row;">
+                <div class="fill">                    
+                    <div class="Chart radar main">
+                        <canvas class="Chart radar main" id="Graph-display" width="calc(100vh - 500px)" height="calc(100vh - 500px)"></canvas>
+                    </div>
                 </div>
-            </div>
-            <br>
 
-            <li style="text-align: left;">Graph type</li>
-            <div class="radiocontainer">
-                <div class="radio Labeled">
+                <div class="fill">
+                    <li style="text-align: left;">Generate Using </li>
+                    <div class="radiocontainer">
+                        <div class="radio Labeled">
+                            <label class="radio">
+                                <input type="radio" name="GraphFilter" checked="">
+                                <span class="radioLabel">Subject</span>
+                            </label>
+                        
+                            <label class="radio">
+                                <input type="radio" name="GraphFilter">
+                                <span class="radioLabel">Identifier</span>
+                            </label>
+                            
+                            <label class="radio">
+                                <input type="radio" name="GraphFilter">
+                                <span class="radioLabel">Tag</span>
+                            </label>
+
+                            <label class="radio">
+                                <input type="radio" name="GraphFilter" checked="">
+                                <span class="radioLabel">Subject & Identifier</span>
+                            </label>
+                        </div>
+                    </div>
+                
+                    <br>
+
+                <li style="text-align: left;">Graph type</li>
+                <div class="radiocontainer">
+                    <div class="radio Labeled">
+                            <label class="radio">
+                            <input type="radio" name="GraphType" checked="">
+                        <span class="radioLabel">Radar</span>
+                        </label>
+                    
                         <label class="radio">
-                        <input type="radio" name="GraphType" checked="">
-                    <span class="radioLabel">Radar</span>
-                    </label>
-                
-                    <label class="radio">
-                        <input type="radio" name="GraphType">
-                        <span class="radioLabel">Bargraph</span>
-                    </label>
-                    
-                    <label class="radio">
-                        <input type="radio" name="GraphType">
-                        <span class="radioLabel">Piechart</span>
-                    </label>
+                            <input type="radio" name="GraphType">
+                            <span class="radioLabel">Bargraph</span>
+                        </label>
+                        
+                        <!-- <label class="radio">
+                            <input type="radio" name="GraphType">
+                            <span class="radioLabel">Piechart</span>
+                        </label> -->
+                    </div>
                 </div>
+                <br>
+                <li style="text-align: left;">Filters</li>
+                <div style="display: flex;justify-content: space-between;">
+                    <input type="text" class="Input fill" id="IdentifierFilter input" placeholder="Input Identifiers">
+                    <input type="text" class="Input fill" id="IdentifierFilter input" placeholder="Input Identifiers">
+                </div>
+                <button class="button primary" id="Generate-graph-button">Generate graph</button>
+                
             </div>
-            <br>
-            <li style="text-align: left;">Filters : </li>
-            <div style="display: flex;justify-content: space-between;">
-                <input type="text" class="Input fill" id="IdentifierFilter input" placeholder="Input Identifiers">
-                <input type="text" class="Input fill" id="IdentifierFilter input" placeholder="Input Identifiers">
-            </div>
-            <button class="button primary" id="Generate-graph-button">Generate graph</button>
-         </div>
+        </div>
+        
+        </div>
 
         <!-- Settings popover -->
         <div class="popover settings" id="Settings-popover" popover>
