@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Font Awesome Icons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://kit.fontawesome.com/e3bbe3e2ee.js" crossorigin="anonymous"></script>
+<!--Get your own code at fontawesome.com-->
+</head>
+<body>
+
+<style>
+    * {
+        color: #fff;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        background-color: #141314;
+    }
+
+    label {
+        transition: filter 0.2s;
+    }
+
+    label input {
+        appearance: none;
+    }
+
+    label:has(input:not(:checked)) {
+        filter: grayscale();
+    }
+
+    .Custom-icon {
+        --scale: 3rem;
+        width: var(--scale);
+        height: var(--scale);
+        background-repeat: no-repeat;
+        image-rendering: optimizeQuality;
+        image-rendering: auto;
+        /* border: solid 5px#000000; */
+    }
+
+    .Custom-icon.clock1 {
+        background-position: center;
+        background-size: calc(var(--scale) * 1.65);
+        background-image: url(/Tests/Test_Assets/Clock0001.png);
+    }
+
+    .Custom-icon.clock2 {
+        background-position: center;
+        background-size: calc(var(--scale) * 1.65);
+        background-image: url(/Tests/Test_Assets/Clock0002.png);
+    }
+
+    .Custom-icon.clock3 {
+        background-position: center;
+        background-size: calc(var(--scale) * 1.65);
+        background-image: url(/Tests/Test_Assets/Clock0003.png);
+    }
+</style>
+
+<p>Some Font Awesome icons:</p>
+
+<i class="fas fa-band-aid"></i>
+<i class="fas fa-cat"></i>
+<i class="fas fa-dragon"></i>
+<i class="far fa-clock"></i>
+<i class="fas fa-clock"></i>
+
+<p>Styled Font Awesome icons (size, color, and shadow):</p>
+<i class="fas fa-clock" style="font-size:24px;"></i>
+<i class="fas fa-clock" style="font-size:36px;"></i>
+<i class="fas fa-clock" style="font-size:48px;color:red;"></i>
+<i class="fas fa-clock" style="font-size:60px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i>
+
+<p>Some Custom icons</p>
+<div>
+    <label>
+        <input type="radio" name="test2">
+        <!-- <div class="Custom-icon clock1"></div> -->
+        <img src="Test_Assets/Clock0001.png" alt="" width="80rem">
+    </label>
+
+    <label>
+        <input type="radio" name="test2">
+        <!-- <div class="Custom-icon clock2"></div> -->
+        <img src="Test_Assets/Clock0002.png" alt="" width="80rem">
+    </label>
+
+    <label>
+        <input type="radio" name="test2">
+        <!-- <div class="Custom-icon clock3"></div> -->
+        <img src="Test_Assets/Clock0003.png" alt="" width="80rem">
+    </label>
+</div>
+<!-- <img src="Test_Assets/Clock0001.png" alt="" width="100px">
+<img src="Test_Assets/Clock0002.png" alt="" width="100px">
+<img src="Test_Assets/Clock0003.png" alt="" width="100px">
+<img src="Test_Assets/Clock0004.png" alt="" width="80rem"> -->
+
+</body>
+</html>

@@ -24,7 +24,7 @@ def get_Grade_count():
     return str(Grade_count)
 
 def read_data(dataLocation=''):
-    print(default_data_file_dir)
+    # print(default_data_file_dir)
     if dataLocation == '':
         dataLocation = default_data_file_dir
     with open(dataLocation,'r') as f:
@@ -35,7 +35,7 @@ def read_data(dataLocation=''):
 @eel.expose
 def openFile(path):
     global default_data_file_dir
-    print(path)
+    # print(path)
     # print(read_data())
     content = read_data(user_data_file_dir)
     content['User-settings']['Current-File'] = path
@@ -56,7 +56,7 @@ def applySettings():
 
 if __name__ == '__main__':
     applySettings()
-    print(default_data_file_dir)
+    # print(default_data_file_dir)
     if not os.path.exists(default_data_file_dir):
         with open(default_data_file_dir,'x') as file:
             file.write(json.dumps({'Grades':[],'Subjects':[],'Identifiers': [],'Version':CurrentVersion,'ExtraMarks':[]}))
@@ -77,6 +77,8 @@ def clean_up_grades():
             grade['Grade'] = str(float(grade['Grade']))
         if grade['Subject'] not in content['Subjects']:
             content['Subjects'].append(grade['Subject'])
+        if grade['Identifiers'] not in content['Identifiers']:
+            content['Identifiers'].append(grade['Identifiers'])
     for sub in content['Subjects'] :
         # print(sub)
         if sub not in list(content['ExtraMarks'].keys()):
@@ -247,6 +249,7 @@ def get_identifier_average(identifiers,Absolute=True):
             return average
         else : return 'identifier does not exist'
 
+@eel.expose
 def addPlus(mark,subject):
     content = read_data(default_data_file_dir)
     if subject in content['ExtraMarks']: 
@@ -255,14 +258,15 @@ def addPlus(mark,subject):
         content['ExtraMarks'][subject] += mark
         write_data(content,default_data_file_dir)
     else :
-        print('Subject does not exist')
+        print(f'Subject : {subject} does not exist')
 
 #saves a grade based on given data
 @eel.expose
 def save_grade(subject,grade,identifiers='',tags=''):
     global Grade_count
 
-    if '+' or 'ExtraMark' in identifiers:
+    if '+' in identifiers:
+        # print(identifiers)
         addPlus(fraction_convert(str(grade)),subject)
 
     else:
@@ -282,12 +286,15 @@ def save_grade(subject,grade,identifiers='',tags=''):
 
 @eel.expose
 def get_grades(sorted=False,accending=False,ExtraMarks=False):
-    print('\033[93mExM : ' , ExtraMarks, '\033[0m')
+    # print('\033[93mExM : ' , ExtraMarks, '\033[0m')
+    clean_up_grades()
     if ExtraMarks:
         content = read_data()
         Grades = content['Grades']
         Marks = content['ExtraMarks']
         if sorted:
+            for i in Grades :
+                i['Grade'] = fraction_convert(i['Grades'])
             quickDictSoct(Grades,'Grade',True)
             printDict(Grades)
             if accending:
@@ -295,8 +302,10 @@ def get_grades(sorted=False,accending=False,ExtraMarks=False):
         return [Grades,Marks]
     if not ExtraMarks:
         content = read_data()['Grades']
-        print(sorted)
+        # print(sorted)
         if sorted:
+            for i in content:
+                i['Grade'] = fraction_convert(i['Grade'])
             quickDictSoct(content,'Grade',True)
             printDict(content)
             if accending:
@@ -330,24 +339,7 @@ def calculate_average(grades:list):
     else: return 0
 
 @eel.expose
-def get_grades_average():
-    content = read_data()
-    grades = []
-    for grade in content['Grades']:
-        grades.append(grade['Grade'])
-    #     print(grade)
-    # print(grades)
-    average = calculate_average(grades)
-    return average
-
-def subject_exists(subject):
-    content = read_data()
-    if subject in content['Subjects']: return True
-    else: return False
-
-
-@eel.expose
-def get_subject_average(subject):
+def get_subject_average(subject,ExtraMarks=True):
     if subject_exists(subject):
         content = read_data()
         grades = []
@@ -355,8 +347,36 @@ def get_subject_average(subject):
             if grade['Subject'] == subject:
                 grades.append(grade['Grade'])
         average = calculate_average(grades)
+        average += content['ExtraMarks'][subject]
         return average
     else : return 'Subject does not exist'
+
+@eel.expose
+def get_grades_average(ExtraMarks=False):
+    content = read_data()
+    clean_up_grades()
+    if ExtraMarks:
+        grades = []
+        averages = {}
+        for i in content['Subjects']:
+            grades.append(round(get_subject_average(i,True),0))
+            print(i,get_subject_average(i,True))
+        average = calculate_average(grades)
+
+    else:
+        grades = []
+        for grade in content['Grades']:
+            grades.append(fraction_convert(grade['Grade']))
+            # print(f'{grade['Subject']} : {fraction_convert(grade['Grade'])}')
+        #     print(grade)
+        # print(grades)
+        average = calculate_average(grades)
+    return average
+
+def subject_exists(subject):
+    content = read_data()
+    if subject in content['Subjects']: return True
+    else: return False
 
 # print(get_grades_average())
 
@@ -488,4 +508,5 @@ def printDict(dict):
 if __name__ == '__main__' :
     applySettings()
     clean_up_grades()
+    print(get_grades_average(True))
     eel.start("Gui.html",size=(900,600))

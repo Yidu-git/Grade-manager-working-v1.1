@@ -84,10 +84,14 @@ function notify(message) {
 }
 
 function check_rating(score) {
-    if (score >= 90) { return 'A' }
-    if (score >= 80) { return 'B' }
-    if (score >= 70) { return 'C' }
-    if (score >= 56) { return 'D' }
+    if (score >= 95) { return 'A+' }
+    if (score >= 90) { return 'A-' }
+    if (score >= 85) { return 'B+' }
+    if (score >= 80) { return 'B-' }
+    if (score >= 75) { return 'C+' }
+    if (score >= 70) { return 'C-' }
+    if (score >= 56) { return 'D+' }
+    // if (score >= 56) { return 'D-' }
     if (score < 56) { return 'F' }
 }
 
@@ -253,16 +257,11 @@ function display_grade(subject, grade, identifiers, tags, id) {
     td_remove.appendChild(check)
 
     // Checking if grade is fraction or out of a hundred
-    if (is_fraction(grade)) {
-        let value = grade.split('/')[0]
-        let total = grade.split('/')[1]
-        // alert(String(value,total))
-        grade = parseFloat(value) / parseFloat(total) * 100
-    }
+    grade = fractionConvert(grade)
 
     let rating = check_rating(parseFloat(grade))
     td_rating.innerText = rating
-    td_rating.setAttribute('class', rating)
+    td_rating.setAttribute('class', rating.split('')[0])
 
     tr.appendChild(td_subject)
     tr.appendChild(td_score)
@@ -309,7 +308,7 @@ function calculate_average(value) {
     // alert(average)
     
     label.innerHTML = 'Average : ' + average
-    average_rating.setAttribute('class', check_rating(average))
+    average_rating.setAttribute('class', check_rating(average).split('')[0])
     average_rating.innerHTML = check_rating(average)
 }
 
@@ -405,7 +404,7 @@ function DrawGraph(canvas,type='radar',Labels,Inputdata,multipleVlaues,DataLabel
     }
 }
 
-function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags=false,ExtraMarks=false,SplitSubjectsByIdentifiers=true,Splitindex=0) {
+function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags=false,ExtraMarks=false,SplitSubjectsByIdentifiers=false,Splitindex=0) {
     let subjects = []
     let Identifiers = []
     let tags = []
@@ -487,7 +486,7 @@ function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags
         GraphDict = {}
         let Subjects = []
         for (let i of grades) {
-            let GradeIdentifier = i['Identifiers'].split(' ')[Splitindex]
+            let GradeIdentifier = String(i['Identifiers']).split(' ')[Splitindex]
             // console.log('GID',GradeIdentifier)
             i['Grade'] = fractionConvert(String(i['Grade']))
             if (!Subjects.includes(i['Subject'])) {
@@ -527,7 +526,7 @@ function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags
                 // console.log('j       ',j)
                 for (x in Subjects) {
                     // console.log('x       ',x)
-                    if (i['Identifiers'].split(' ')[0] === j) {
+                    if (String(i['Identifiers']).split(' ')[0] === j) {
                         GradesIdentifiers[j][i['Subject']][0] += 1
                         GradesIdentifiers[j][i['Subject']][1] += Grade
                         // console.log('x       ',GradesIdentifiers[j][i['Subject']][1])
@@ -560,38 +559,41 @@ function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags
     } else if (ByIdentifiers) {
         let IdentifierCount = {}
         for (i of grades) {
-            let Gradesdentifiers = i['Identifiers'].split(' ')
+            let GradeIdentifiers = [i['Identifiers']]
+            // console.log('IDs' , i)
+            console.log('IDs' , i['Identifiers'])
+            if (String(i['Identifiers']).includes(' ')) {
+                GradeIdentifiers = String(i['Identifiers']).split(' ')
+            }
             i['Grade'] = fractionConvert(String(i['Grade']))
-            for (x of GradeIdentifiers) {
-                if (!Identifiers.includes(x)) {
-                    Identifiers.push(x);
+            for (id in GradeIdentifiers) {
+                if (!Identifiers.includes(GradeIdentifiers[id])) {
+                    Identifiers.push(GradeIdentifiers[id]);
                     // console.log(Gradesdentifiers)
-                    IdentifierCount[x] = [1,i['Grade']]
+                    IdentifierCount[GradeIdentifiers[id]] = [1,i['Grade']]
                     // console.log(IdentifierCount[x])
                 } else {
-                    IdentifierCount[x][0] ++
-                    IdentifierCount[x][1] += i['Grade']
+                    IdentifierCount[GradeIdentifiers[id]][0] += 1
+                    IdentifierCount[GradeIdentifiers[id]][1] += i['Grade']
                 }
             }
         }
 
-        for (i in IdentifierCount) {
-            GraphDict[i] =  Math.round(IdentifierCount[i][1] / IdentifierCount[i][0] * 100) / 100
-            console.log[i]
-            // console.log('CL ------------ ',IdentifierCount[i])
-        }
+        console.log('CL ------------ ',IdentifierCount)
 
-        for (i in GraphDict) {
-            values.push(GraphDict[i])
+        for (i in IdentifierCount) {
+            values.push(Math.round(IdentifierCount[i][1] / IdentifierCount[i][0] * 100) / 100)
+            // console.log[i]
+            // console.log('CL ------------ ',IdentifierCount[i])
         }
 
         console.log('V ------------ ',GraphDict)
 
-        DrawGraph(GraphDisplay,true,Identifiers,values,false)
+        DrawGraph(GraphDisplay,type,Identifiers,values,false)
 
     } else if (ByTags) {
         for (i of grades) {
-            let Gradetags = i['Tags'].split(' ')
+            let Gradetags = String(i['Tags']).split(' ')
             for (x of Gradetags) {
                 if (!tags.includes(x)) {tags.push(x)}
             } 
@@ -603,25 +605,42 @@ function GenerateGradesGraph(Data,type,BySubject=true,ByIdentifiers=false,ByTags
 // alert(eel.return_test()(result => { return() => result}))
 
 GraphDisplayBtn.addEventListener('click', (event) => {
+    let GraphFilters = document.getElementsByName('GraphFilter')
+    let subject = GraphFilters[0].checked
+    let Identifiers = GraphFilters[1].checked
+    let Tags = GraphFilters[2].checked
+    let Splitsubject = GraphFilters[3].checked
     if (document.getElementsByName('GraphType')[0].checked) {
-        eel.get_grades(false,false,true)((result) => {
+        eel.get_grades(false,false,subject)((result) => {
             GenerateGradesGraph(result, 'radar' ,
-                document.getElementsByName('GraphFilter')[0].checked,
-                document.getElementsByName('GraphFilter')[1].checked,
-                document.getElementsByName('GraphFilter')[2].checked,
-                false,
-                document.getElementsByName('GraphFilter')[3].checked,
+                (subject || Splitsubject),
+                Identifiers,
+                Tags,
+                subject,
+                Splitsubject,
                 0)
             })
-    } if (document.getElementsByName('GraphType')[1].checked) {
-        eel.get_grades(false,false,true)((result) => {
-            GenerateGradesGraph(result, 'bar',
-                document.getElementsByName('GraphFilter')[0].checked,
-                document.getElementsByName('GraphFilter')[1].checked,
-                document.getElementsByName('GraphFilter')[2].checked,
-                true,true,0)
+    } else if (document.getElementsByName('GraphType')[1].checked) {
+        eel.get_grades(false,false,subject)((result) => {
+            GenerateGradesGraph(result, 'bar' ,
+                (subject || Splitsubject),
+                Identifiers,
+                Tags,
+                subject,
+                Splitsubject,
+                0)
             })
-    }
+    } else if (document.getElementsByName('GraphType')[2].checked) {
+        eel.get_grades(false,false,subject)((result) => {
+            GenerateGradesGraph(result, 'line' ,
+                (subject || Splitsubject),
+                Identifiers,
+                Tags,
+                subject,
+                Splitsubject,
+                0)
+            })
+    } 
 })
 
 SortinBtn.addEventListener('click', (event) => {
@@ -684,4 +703,4 @@ eel.get_identifiers()(Display_identifiers)
 eel.get_settings()(Apply_settings)
 eel.read_subjects()(Display_subjects)
 eel.get_grades()(display_all_grades)
-eel.get_grades()((result) => {GenerateGradesGraph(result)})
+eel.get_grades(false,false,true)((result) => {GenerateGradesGraph(result,'radar',true,false,false,true,false,0)})

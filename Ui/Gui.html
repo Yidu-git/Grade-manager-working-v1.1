@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="Styles/main.css">
     <link rel="stylesheet" href="Styles/Ratings.css">
     <link rel="stylesheet" href="Styles/Icons.css">
+    <link rel="stylesheet" href="Styles/3DIcons.css">
 </head>
 <body>
     
@@ -20,7 +21,9 @@
         <div class="table title">
             <li>Grades</li>
             <div style="display: flex; gap: 5px; text-align: center; justify-content: center; align-content: center;">
-                <button class="button primary" popovertarget="Popover">+</button>
+                <button class="button primary" popovertarget="Popover" style="padding: 0 0;">
+                    <div class="icon3d Add Grade" style="background-size: 1.8rem; background-position: center; height: 25px; width: 50px; padding: 0px;"></div>
+                </button>
                 <button class="button secondary" popovertarget="Average-popover">Average</button>
                 <button class="button secondary charticon" popovertarget="StatisticsPopover">Statistics</button>
                 <button class="button secondary" id="Sort-button">Sort</button>
@@ -66,7 +69,7 @@
                             </label>
                         
                             <label class="radio">
-                                <input type="radio" name="GraphFilter">
+                                <input type="radio" name="GraphFilter" >
                                 <span class="radioLabel">Identifier</span>
                             </label>
                             
@@ -76,7 +79,7 @@
                             </label>
 
                             <label class="radio">
-                                <input type="radio" name="GraphFilter" checked="">
+                                <input type="radio" name="GraphFilter" >
                                 <span class="radioLabel">Subject & Identifier</span>
                             </label>
                         </div>
@@ -86,21 +89,24 @@
 
                 <li style="text-align: left;">Graph type</li>
                 <div class="radiocontainer">
-                    <div class="radio Labeled">
+                    <div class="radio Labeled" style="display:flex; flex-direction: row;">
                             <label class="radio">
-                            <input type="radio" name="GraphType" checked="">
-                        <span class="radioLabel">Radar</span>
+                            <input type="radio" name="GraphType" checked>
+                            <!-- <span class="radioLabel Chart Radar">Radar</span> -->
+                            <div class="radioLabel icon3d Chart Radar"></div>
                         </label>
                     
                         <label class="radio">
                             <input type="radio" name="GraphType">
-                            <span class="radioLabel">Bargraph</span>
+                            <!-- <span class="radioLabel">Bargraph</span> -->
+                            <div class="radioLabel icon3d Chart Bar"></div>
                         </label>
                         
-                        <!-- <label class="radio">
+                        <label class="radio">
                             <input type="radio" name="GraphType">
-                            <span class="radioLabel">Piechart</span>
-                        </label> -->
+                            <!-- <span class="radioLabel">Linechart</span> -->
+                            <div class="radioLabel icon3d Chart Pie"></div>
+                        </label>
                     </div>
                 </div>
                 <br>
@@ -172,7 +178,7 @@
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
                 <input type="text" class="Input" placeholder="Enter a score" id="Score-input">
                 <input class="Input" list="Subjects" name="Subjects" id="Subject-input" placeholder="Pick a subject">
-                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="[Identifiers] type term year (+ or ExtraMark for Extra Mark)">
+                <input class="Input" list="Types" name="Types" id="Grade-type-input" placeholder="[Identifiers] type term year (+ for Extra Mark)">
                 <input class="Input" list="Types" name="Types" id="Grade-tags-input" placeholder="[tags] important">
                 <button class="button primary" id="Submit-button" popovertarget="Popover" popovertargetaction="hide">Submit</button>
                 <button class="button primary" id="Subject-add-button" >Add subject</button>
@@ -214,7 +220,6 @@
 
     <div id="Notification-popover" class="popover" popover><li style="align-self: center;"></li></div>
 
-    
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script> -->
     <script src="Scripts/chart.min.js"></script>
     <script src="/eel.js" ></script>

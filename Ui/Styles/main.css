@@ -77,13 +77,13 @@
 
 :root:has(#Color-scheme [value='Blue']:checked) {
     --primary : #1c49ff ;
-    --primary-hover: #6666fa ;
-    --primary-active: #9490ff ;
-    --primary-shadow: #03069c76;
-    --secondary : #506aff ;
-    --secondary-hover: #5076d5 ;
-    --secondary-active: #90b9ff ;
-    --secondary-shadow: #00328976;
+    --primary-hover: #4b45ff ;
+    --primary-active: #6f80ff ;
+    --primary-shadow: #000cb176;
+    --secondary : #1b9cff ;
+    --secondary-hover: #50a0d5 ;
+    --secondary-active: #90f0ff ;
+    --secondary-shadow: #00d5ff9d;
     --text-button: white;
 }
 
@@ -252,7 +252,6 @@ body {
     gap: 0;
     width: fit-content;
     height: fit-content;
-    /* height: 10px; */
     border-radius: var(--CornerRadius-3);
 }
 
@@ -272,7 +271,11 @@ body {
 .radio.Labeled .radio input:checked + .radioLabel {
     background-color: var(--primary);
     color: var(--text-button);
-    height: 100%;
+    /* height: 50px; */
+}
+
+.radio.Labeled .radio input:not(:checked) + .radioLabel {
+    filter: grayscale();
 }
 
 .header span{
@@ -337,7 +340,6 @@ th {
 
 tr,tr td{
     height: fit-content;
-    /* background-color: #03b5d0; */
 }
 
 .NoScroll::-webkit-scrollbar {
@@ -407,7 +409,7 @@ tr,tr td{
 }
 
 .button.secondary:hover {
-    box-shadow: 0px 5px 5px 0px  color-mix(in hsl,var(--secondary)40%,var(--bg));
+    box-shadow: 0px 5px 5px 0px  color-mix(in oklab,var(--secondary-hover)40%,rgba(0,0,0,0.1));
 }
 
 .button.secondary:active {
