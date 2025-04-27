@@ -12,52 +12,52 @@
 }
 
 .Clock {
-    background-image: url(/Ui/Assets/3d/Clock0005.png);
+    background-image: url(/Assets/3d/Clock0005.png);
     background-size: calc(var(--scale) + 0px);
 }
 
 .Clock.n1 {
-    background-image: url(/Ui/Assets/3d/Clock0001.png);
+    background-image: url(/Assets/3d/Clock0001.png);
 }
 
 .Clock.n2 {
-    background-image: url(/Ui/Assets/3d/Clock0002.png);
+    background-image: url(/Assets/3d/Clock0002.png);
 }
 
 .Clock.n3 {
-    background-image: url(/Ui/Assets/3d/Clock0003.png);
+    background-image: url(/Assets/3d/Clock0003.png);
 }
 
 .Clock.n4 {
-    background-image: url(/Ui/Assets/3d/Clock0004.png);
+    background-image: url(/Assets/3d/Clock0004.png);
 }
 
 .MagnifyingGlass {
-    background-image: url(/Ui/Assets/3d/Magnifying_glass0001.png);
+    background-image: url(/Assets/3d/Magnifying_glass0001.png);
 }
 
 .StopWatch {
-    background-image: url(/Ui/Assets/3d/Stopwatch0005.png);
+    background-image: url(/Assets/3d/Stopwatch0005.png);
 }
 
 .StopWatch1 {
-    background-image: url(/Ui/Assets/3d/Stopwatch0001.png);
+    background-image: url(/Assets/3d/Stopwatch0001.png);
 }
 
 .StopWatch2 {
-    background-image: url(/Ui/Assets/3d/Stopwatch0002.png);
+    background-image: url(/Assets/3d/Stopwatch0002.png);
 }
 
 .StopWatch3 {
-    background-image: url(/Ui/Assets/3d/Stopwatch0003.png);
+    background-image: url(/Assets/3d/Stopwatch0003.png);
 }
 
 .StopWatch4 {
-    background-image: url(/Ui/Assets/3d/Stopwatch0004.png);
+    background-image: url(/Assets/3d/Stopwatch0004.png);
 }
 
 .Add.Grade {
-    background-image: url(/Ui/Assets/3d/Test\ Add.png);
+    background-image: url(/Assets/3d/Test\ Add.png);
 }
 
 .Chart {
@@ -65,18 +65,23 @@
 }
 
 .Pie {
-    background-image: url(/Ui/Assets/3d/PieChart0001.png);
+    background-image: url(/Assets/3d/PieChart0001.png);
     background-size: calc(var(--scale) + 5px);
 }
 
 .Radar {
-    background-image: url(/Ui/Assets/3d/RadarChart0001.png);
+    background-image: url(/Assets/3d/RadarChart0001.png);
     background-size: calc(var(--scale) - 5px);
     /* width: 30px; */
     height: 50px;
 }
 
 .Bar {
-    background-image: url(/Ui/Assets/3d/BarChart0001.png);
+    background-image: url(/Assets/3d/BarChart0001.png);
     background-size: calc(var(--scale) + 5px);
+}
+
+.line {
+    background-image: url(/Assets/3d/LineChart0001.png);
+    background-size: calc(var(--scale) - 5px);
 }

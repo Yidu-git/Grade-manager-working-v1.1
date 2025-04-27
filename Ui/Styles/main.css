@@ -544,7 +544,7 @@ button.icon {
 
 .checkbox:checked {
     background-color: var(--primary);
-    background-image: url(/Ui/Assets/check.svg);
+    background-image: url(/Assets/check.svg);
     background-size: 24px;
     background-repeat: no-repeat;
     background-position: center;
